@@ -24,7 +24,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
 
         public override string ToString()
         {
-            return string.Format("BM{2}_{0}_{1}", GetTargetName(), GetObservedTime().ToString(), m_switchObserved);
+            return string.Format(" [BM{2}_{0}_{1}] ", GetTargetName(), GetObservedTime().ToString(), m_switchObserved);
         }
 
         

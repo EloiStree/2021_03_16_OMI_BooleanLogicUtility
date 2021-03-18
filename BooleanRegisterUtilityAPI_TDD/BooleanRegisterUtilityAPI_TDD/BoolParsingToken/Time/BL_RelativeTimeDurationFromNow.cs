@@ -25,7 +25,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
         }
         public override string ToString()
         {
-            return string.Format("Trd{0}-{1}", m_relativeToNowNearest, m_relativeToNowFarest);
+            return string.Format(" [Trd{0}-{1}] ", m_relativeToNowNearest, m_relativeToNowFarest);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BooleanRegisterUtilityAPI_TDD.BoolParsingToken;
+using BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,16 @@ namespace BooleanRegisterUtilityAPI_TDD
     {
         static void Main(string[] args)
         {
+            BL_BuilderElements builder;
             TextLineSpliteAsBooleanLogicTokens tokener;
 
             ParserListToExperiemntTDD tdd = new ParserListToExperiemntTDD();
             foreach (string item in tdd.conditions)
             {
                 Parse(item, out tokener);
-                BLTokensToBLBuilder test = new BLTokensToBLBuilder(tokener);
+                BLTokensToBLBuilder test = new BLTokensToBLBuilder(tokener, out builder);
+                Console.WriteLine(builder);
+
             }
 
             string[] quicktest = new string[] {
@@ -28,7 +32,9 @@ namespace BooleanRegisterUtilityAPI_TDD
             foreach (string item in quicktest)
             {
                 Parse(item, out tokener);
-                BLTokensToBLBuilder test = new BLTokensToBLBuilder(tokener);
+                BLTokensToBLBuilder test = new BLTokensToBLBuilder(tokener, out builder);
+                Console.WriteLine(builder);
+
             }
 
 
@@ -43,14 +49,13 @@ namespace BooleanRegisterUtilityAPI_TDD
                 givenText = Console.ReadLine();
                 Parse(givenText, out tokener);
 
-
             } while (givenText.Length > 0);
 
 
         
         }
 
-        private static void ConvertFastVersion(TextLineSpliteAsBooleanLogicTokens tokener)
+        private static void DisplayAsDebugLinesInConsole(TextLineSpliteAsBooleanLogicTokens tokener)
         {
             uint level=0;
             foreach (string item in tokener.GetTokens())
@@ -131,7 +136,7 @@ namespace BooleanRegisterUtilityAPI_TDD
             //Console.WriteLine("\n\n\n");
 
 
-            ConvertFastVersion(tokener);
+            DisplayAsDebugLinesInConsole(tokener);
         }
     }
 }

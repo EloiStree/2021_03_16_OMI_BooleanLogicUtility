@@ -68,7 +68,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item.Time
 
         public override string ToString()
         {
-            return string.Format("TO{0},{1}", IsRelativeToNow(), ""+m_key+" "+m_range);
+            return string.Format(" [TO{0},{1}] ", IsRelativeToNow(), ""+m_key+" "+m_range);
         }
     }
 }

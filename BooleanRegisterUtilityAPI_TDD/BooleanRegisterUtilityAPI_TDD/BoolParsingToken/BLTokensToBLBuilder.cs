@@ -1,6 +1,7 @@
 ﻿using BooleanRegisterUtilityAPI.BooleanLogic.Time;
 using BooleanRegisterUtilityAPI.Interface;
 using BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item;
+using BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item.Builder;
 using BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item.Time;
 using BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore;
 using System;
@@ -13,13 +14,19 @@ using static BooleanRegisterUtilityAPI_TDD.ProgramParser;
 
 namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
 {
+
+
+    
+
     public class BLTokensToBLBuilder
     {
         TextLineSpliteAsBooleanLogicTokens m_tokenSpliter;
+        List<BL_BooleanItem> items = new List<BL_BooleanItem>();
 
-        public BLTokensToBLBuilder(TextLineSpliteAsBooleanLogicTokens tokenSpliter)
+        public BLTokensToBLBuilder(TextLineSpliteAsBooleanLogicTokens tokenSpliter, out BL_BuilderElements elements)
         {
-            Console.WriteLine("A");
+            elements = new BL_BuilderElements();
+            // Console.WriteLine("A");
             m_tokenSpliter = tokenSpliter;
 
             IEnumerable<string> tokensAsString = tokenSpliter.GetTokens();
@@ -31,10 +38,12 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
                 tokens.Add(t);
             }
 
+            elements.SetTokens(tokens);
+
             StringTokensRegister itemtoken = m_tokenSpliter.m_items;
-            List<BL_BooleanItem> items = new List<BL_BooleanItem>();
+            items = new List<BL_BooleanItem>();
             bool found;
-            Console.WriteLine("C");
+            // Console.WriteLine("C");
             for (uint i = 0; i < itemtoken.GetCount(); i++)
             {
                 BL_BooleanItem bItem;
@@ -43,12 +52,13 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
                 TryToParse(textOfItem, out found, out bItem);
                 if (found)
                 {
-                    Console.WriteLine("-D>"+bItem);
+                    //    Console.WriteLine("-D>"+bItem);
                     items.Add(bItem);
                 }
             }
+            elements.SetItemAs(items);
 
-            Console.WriteLine("B");
+           // Console.WriteLine("B");
         }
 
         public static Regex booleanNameFormat = new Regex("[a-zA-Z][a-zA-Z0-9]*");
@@ -135,63 +145,38 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
         {
             timevalue = timevalue.ToLower();
             IBoolObservedTime result = null;
-            ITimeOfDay timeOfDay = null;
 
             if (timevalue.IndexOf("⏰") > -1)
             {
-
+                timevalue = timevalue.Replace("⏰", "");
                 //ABSOLUTE TIME
-                if (timevalue.IndexOf(":") > -1)
+                if (timevalue.IndexOf("#") > -1)
                 {
-                    string[] tokens = timevalue.Split(':');
+                    ITimeOfDay lt = null;
+                    ITimeOfDay rt = null;
+                    string[] tokens = timevalue.Split('#');
                     if (tokens.Length == 2)
                     {
-                        timeOfDay = new BL_TimeOfDay(tokens[0], tokens[1], "0", "0");
+
+                        ConvertToAbsoluteTime(tokens[0], out lt);
+                        ConvertToAbsoluteTime(tokens[1], out rt);
+                        result = new BL_TimeToObserve(false, new BL_AbsoluteTimeDurationFromNow(lt,rt));
                     }
-                    else if (tokens.Length == 3)
-                    {
-                        timeOfDay = new BL_TimeOfDay(tokens[0], tokens[1], tokens[2], "0");
-                    }
-                    else if (tokens.Length == 4)
-                    {
-                        timeOfDay = new BL_TimeOfDay(tokens[0], tokens[1], tokens[3], tokens[4]);
-                    }
+
                 }
                 else {
-                    string h = "0", m = "0", s = "0", ms="0";
-                    Match match = Regex.Match(timevalue, "[0-9]+h");
-                    if (match.Success)
-                    {
-                        h = match.Value.Replace("h", "");
-                    }
 
-                    match = Regex.Match(timevalue, "[0-9]+m[^s]");
-                    if (match.Success)
-                    {
-                        m = match.Value.Replace("m", "");
-                    }
-
-                    match = Regex.Match(timevalue, "[0-9]+s");
-                    if (match.Success)
-                    {
-                        s = match.Value.Replace("s", "");
-                    }
-
-                    match = Regex.Match(timevalue, "[0-9]+ms");
-                    if (match.Success)
-                    {
-                        ms = match.Value.Replace("ms", "");
-                    }
-
-                    timeOfDay = new BL_TimeOfDay(h, m, s, ms);
+                    ITimeOfDay timeOfDay = null;
+                    ConvertToAbsoluteTime(timevalue, out timeOfDay);
+                    result = new BL_TimeToObserve(false, new BL_AbsoluteTimeFromNow(timeOfDay));
                 }
-                result = new BL_TimeToObserve(false, new BL_AbsoluteTimeFromNow(timeOfDay));
+
             }
             else {
                 //RELATIVE TIME
-                if (timevalue.IndexOf(":") > -1)
+                if (timevalue.IndexOf("#") > -1)
                 {
-                    string[] tokens = timevalue.Split(':');
+                    string[] tokens = timevalue.Split('#');
                     if (tokens.Length == 2)
                     {
                         ITimeValue part1 = GetTimeOf(tokens[0]),
@@ -210,6 +195,70 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
 
             }
             return result;
+        }
+
+        private static void ConvertToAbsoluteTime(string timevalue, out ITimeOfDay timeOfDay)
+        {
+            timeOfDay = null;
+            if (timevalue.IndexOf(":") > -1)
+            {
+                string[] tokens = timevalue.Split(':');
+                if (tokens.Length == 2)
+                {
+                    timeOfDay = new BL_TimeOfDay(tokens[0], tokens[1], "0", "0");
+                }
+                else if (tokens.Length == 3)
+                {
+                    timeOfDay = new BL_TimeOfDay(tokens[0], tokens[1], tokens[2], "0");
+                }
+                else if (tokens.Length == 4)
+                {
+                    timeOfDay = new BL_TimeOfDay(tokens[0], tokens[1], tokens[3], tokens[4]);
+                }
+            }
+            else
+            {
+                string h = "0", m = "0", s = "0", ms = "0";
+                string left = "ms";
+                Match match = Regex.Match(timevalue, "[0-9]+h");
+                if (match.Success)
+                {
+                    h = match.Value.Replace("h", "");
+                    left = "m";
+                }
+
+                match = Regex.Match(timevalue, "[0-9]+m[^s]");
+                if (match.Success)
+                {
+                    m = match.Value.Replace("m", "");
+                    left = "s";
+                }
+
+                match = Regex.Match(timevalue, "[0-9]+s");
+                if (match.Success)
+                {
+                    s = match.Value.Replace("s", "");
+                    left = "ms";
+                }
+
+                match = Regex.Match(timevalue, "[0-9]+ms");
+                if (match.Success)
+                {
+                    ms = match.Value.Replace("ms", "");
+                    left = "ms";
+                }
+                match = Regex.Match(timevalue, "[0-9]+$");
+                if (match.Success)
+                {
+                    if (left == "m") m = match.Value;
+                    if (left == "s") s = match.Value;
+                    if (left == "ms") ms = match.Value;
+
+                }
+
+                timeOfDay = new BL_TimeOfDay(h, m, s, ms);
+            }
+
         }
 
         private ITimeValue GetTimeOf(string timeAsString)
@@ -304,6 +353,27 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
 
         public string GetStringSource() { return m_linkedSource; }
         public TokenType GetTokenType() { return m_token; }
+
+        public bool IsBoolToken()
+        {
+            return m_token == TokenType.BooleanToken;
+        }
+        public bool IsBoolToken(out int index) {
+            index = 0;
+            if (IsBoolToken())
+            {
+
+               if(int.TryParse( m_linkedSource.Replace("I", ""), out index)){
+                    return true;
+               }
+            }
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return "["+m_token + ":" + m_linkedSource+"]";
+        }
     }
     public enum TokenType
     {

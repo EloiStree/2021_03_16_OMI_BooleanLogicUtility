@@ -63,8 +63,8 @@ namespace BooleanRegisterUtilityAPI_TDD
             "shift⌈200",// released since 200ms
             "shift↓200", //switch true since 200ms
             "shift↑200",//switch false since 200ms
-            "shift⌊200:400",// maintaining true between 200ms and 400ms
-            "shift↓200:400",// pressed since 200 ms
+            "shift⌊200#400",// maintaining true between 200ms and 400ms
+            "shift↓200#400",// pressed since 200 ms
             "shift↑1.453s",//switch false since 1453ms
             "shift↑1.5m",//switch false since 1m 30 seconds
             "shift‾200", //was false there is 200ms
@@ -72,6 +72,8 @@ namespace BooleanRegisterUtilityAPI_TDD
             "shift‾⏰12h45m30s456",//was false at 12 h 45m 30s 456 millisecond base on DateTime.Now
             "shift_⏰14:20:30",//Was true at 14 h 20m 30s base on DateTime.Now
             "shift_⏰14:20",//Was true at 14 h 20m  base on DateTime.Now
+            "shift_⏰14:20#15:00",// Betwen 14:20 to 15:00
+            "shift_⏰14:20#16:30:20",//Was true at 14 h 20m  base on DateTime.Now
             
             "[ ]",
             "[ ]",

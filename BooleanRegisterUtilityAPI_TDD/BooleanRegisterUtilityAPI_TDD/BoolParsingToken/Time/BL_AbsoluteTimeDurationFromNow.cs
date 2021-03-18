@@ -24,7 +24,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
         }
         public override string ToString()
         {
-            return string.Format("Tad{0}-{1}", m_timeOfDayToNowNearest, m_timeOfDayToNowFarest);
+            return string.Format(" [Tad{0}-{1}] ", m_timeOfDayToNowNearest, m_timeOfDayToNowFarest);
         }
     }
 }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.GroupOperation
 {
-    class BL_GroupOR
+    public class BL_GroupOR
     {
+
     }
 }

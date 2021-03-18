@@ -23,7 +23,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
         }
         public override string ToString()
         {
-            return string.Format("BOT_{0}_{1}", GetTargetName(), m_timeObserved.ToString() );
+            return string.Format(" [BOT_{0}_{1}] ", GetTargetName(), m_timeObserved.ToString() );
         }
     }
 }

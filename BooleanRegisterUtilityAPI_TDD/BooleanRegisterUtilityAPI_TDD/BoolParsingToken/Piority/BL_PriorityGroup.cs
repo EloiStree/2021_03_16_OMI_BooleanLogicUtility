@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Piority
 {
-    class BL_PriorityGroup
+    public class BL_PriorityGroup
     {
+
     }
 }

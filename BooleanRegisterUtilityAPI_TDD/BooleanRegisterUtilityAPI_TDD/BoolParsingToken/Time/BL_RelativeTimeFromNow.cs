@@ -25,7 +25,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
 
         public override string ToString()
         {
-            return string.Format("Trk{0}", m_relativeToNow);
+            return string.Format(" [Trk{0}] ", m_relativeToNow);
         }
     }
 }

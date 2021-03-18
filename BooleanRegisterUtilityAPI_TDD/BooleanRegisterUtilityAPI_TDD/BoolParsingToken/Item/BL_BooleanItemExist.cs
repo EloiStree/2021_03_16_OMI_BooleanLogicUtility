@@ -14,5 +14,9 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
         {
             m_existanceCheck = existanceCheck;
         }
+        public override string ToString()
+        {
+            return string.Format(" [B?{0}_{1}] ", m_existanceCheck, GetTargetName());
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
         }
         public override string ToString()
         {
-            return string.Format("Tak{0}", m_timeOfDay);
+            return string.Format(" [Tak{0}] ", m_timeOfDay);
         }
     }
 }

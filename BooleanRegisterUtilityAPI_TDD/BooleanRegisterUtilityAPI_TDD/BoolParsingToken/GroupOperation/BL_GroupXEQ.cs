@@ -8,5 +8,6 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.GroupOperation
 {
     public class BL_GroupXEQ
     {
+
     }
 }

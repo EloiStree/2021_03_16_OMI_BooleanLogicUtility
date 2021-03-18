@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.GroupOperation
 {
-    public class BL_GroupAND
+    public class BL_DominoFalseTrue
     {
+
 
     }
 }

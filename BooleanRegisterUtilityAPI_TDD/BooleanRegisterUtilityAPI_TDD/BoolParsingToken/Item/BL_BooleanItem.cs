@@ -19,7 +19,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
 
         public override string ToString()
         {
-            return string.Format("BOT_{0}", GetTargetName());
+            return string.Format(" [B{0}] ", GetTargetName());
         }
     }
 }

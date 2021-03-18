@@ -55,7 +55,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item.Time
 
         public override string ToString()
         {
-            return string.Format("T{0}h{1}m{2}s{3}", GetHourOn24HFromat(), GetMinutes(), GetSeconds(), GetMilliseconds());
+            return string.Format(" [T{0}h{1}m{2}s{3}] ", GetHourOn24HFromat(), GetMinutes(), GetSeconds(), GetMilliseconds());
         }
     
     }

@@ -20,5 +20,10 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
             m_value = value?BoolState.True: BoolState.False;
         }
         public BoolState GetObserved() { return m_value; }
+
+        public override string ToString()
+        {
+            return string.Format(" [Btf{0}_{1}] ", m_value == BoolState.True, GetTargetName());
+        }
     }
 }

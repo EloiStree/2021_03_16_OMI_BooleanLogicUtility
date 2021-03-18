@@ -18,6 +18,10 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
         {
             m_stateObserved = stateObserved ? BoolState.True: BoolState.False;
         }
+        public override string ToString()
+        {
+            return string.Format(" [BtfAT{2}_{0}_{1}] ", GetTargetName(), GetObservedTime().ToString(), m_stateObserved == BoolState.True);
+        }
 
     }
 }

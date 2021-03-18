@@ -23,7 +23,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
         }
         public override string ToString()
         {
-            return string.Format("BOS_{0}_{1}", GetTargetName(), GetObservedTime().ToString());
+            return string.Format(" [BOS_{0}_{1}] ", GetTargetName(), GetObservedTime().ToString());
         }
     }
 }
