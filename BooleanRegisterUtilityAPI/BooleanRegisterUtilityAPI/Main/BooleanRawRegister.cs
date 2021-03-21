@@ -28,7 +28,7 @@ namespace BooleanRegisterUtilityAPI.BoolHistoryLib
             SetSize(size);
         }
 
-        internal void SetValue(string name, bool value)
+        public void SetValue(string name, bool value)
         {
             DirectAccess access;
             access = GetBooleanReference(name);
