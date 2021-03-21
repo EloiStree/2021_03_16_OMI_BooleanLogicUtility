@@ -21,7 +21,8 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
 
         public void GetTime(DateTime now, out DateTime nearestOfNow, out DateTime farestOfNow)
         {
-            throw new NotImplementedException();
+            nearestOfNow = now.AddSeconds(m_relativeToNowNearest.GetAsSeconds());
+            farestOfNow = now.AddSeconds(m_relativeToNowFarest.GetAsSeconds());
         }
         public override string ToString()
         {

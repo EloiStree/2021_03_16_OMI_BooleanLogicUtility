@@ -10,6 +10,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
     public class BL_BooleanItemIsTrueOrFalseAt : BL_BooleanItemWithObservedTime
     {
         public BoolState m_stateObserved;
+       
         public BL_BooleanItemIsTrueOrFalseAt(string boolNamedId, IBoolObservedTime observedTime, BoolState stateObserved) : base(boolNamedId, observedTime)
         {
             m_stateObserved = stateObserved;

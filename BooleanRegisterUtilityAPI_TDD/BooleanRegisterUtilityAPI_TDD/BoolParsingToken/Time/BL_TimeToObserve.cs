@@ -70,5 +70,14 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item.Time
         {
             return string.Format(" [TO{0},{1}] ", IsRelativeToNow(), ""+m_key+" "+m_range);
         }
+
+        public ObservedTimeType GetObservedType()
+        {
+            if (m_isRelative && GetTimeKey() != null) return ObservedTimeType.KeyRelative;
+            if (m_isRelative && GetTimeRange() != null) return ObservedTimeType.RangeRelative;
+            if (!m_isRelative && GetTimeKey() != null) return ObservedTimeType.KeyAbsolute;
+            if (!m_isRelative && GetTimeRange() != null) return ObservedTimeType.RangeAbsolute;
+            throw new Exception("Time key and range should never be null at the same time");
+        }
     }
 }

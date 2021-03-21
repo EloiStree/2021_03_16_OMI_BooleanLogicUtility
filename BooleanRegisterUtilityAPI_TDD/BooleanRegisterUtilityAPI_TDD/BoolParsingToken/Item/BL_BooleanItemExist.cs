@@ -10,6 +10,11 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
     public class BL_BooleanItemExist : BL_BooleanItemDefault
     {
         public BoolExistanceState m_existanceCheck;
+
+        public BL_BooleanItemExist(string boolNamedId) : base(boolNamedId)
+        {
+        }
+
         public BL_BooleanItemExist(string boolNamedId, BoolExistanceState existanceCheck) : base(boolNamedId)
         {
             m_existanceCheck = existanceCheck;

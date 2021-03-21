@@ -173,6 +173,12 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.LogicBlock
                 return Append(false, t, logic);
             return this;
         }
+
+        public void Flush()
+        {
+            m_current = null;
+        }
+
         public LogicBlockBuilder AppendRight(char appendTypeAsChar, LogicBlock logic)
         {
             bool c;

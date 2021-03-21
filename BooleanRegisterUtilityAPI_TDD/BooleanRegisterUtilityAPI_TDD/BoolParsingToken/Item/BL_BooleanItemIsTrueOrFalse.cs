@@ -11,6 +11,10 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
     {
          BoolState m_value;
 
+        public BL_BooleanItemIsTrueOrFalse(string boolNamedId) : base(boolNamedId)
+        {
+        }
+
         public BL_BooleanItemIsTrueOrFalse(string boolNamedId, BoolState value) : base(boolNamedId)
         {
             m_value = value;

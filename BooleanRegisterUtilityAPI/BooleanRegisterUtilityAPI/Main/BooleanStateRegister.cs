@@ -1,14 +1,17 @@
-﻿using BooleanRegisterUtilityAPI.BoolHistoryLib;
+﻿using BooleanRegisterUtilityAPI.BooleanLogic;
+using BooleanRegisterUtilityAPI.BoolHistoryLib;
+using BooleanRegisterUtilityAPI.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BooleanRegisterUtilityAPI.BoolHistoryLib.BooleanRawRegister;
 
 namespace BooleanRegisterUtilityAPI.Beans
 {
 
-    public class BooleanStateRegister
+    public class BooleanStateRegister : IBooleanStorage 
     {
 
 
@@ -85,7 +88,7 @@ namespace BooleanRegisterUtilityAPI.Beans
 
         }
 
-        public bool GetValueOf(string name)
+        public bool GetValue(string name)
         {
             name = name.ToLower();
             return m_storedHistory[name].GetValue();
@@ -135,7 +138,7 @@ namespace BooleanRegisterUtilityAPI.Beans
             bool has = Contains(booleanName);
             if (has)
             {
-                bool value = GetValueOf(booleanName);
+                bool value = GetValue(booleanName);
                 Set(booleanName, !value);
             }
         }
@@ -174,6 +177,82 @@ namespace BooleanRegisterUtilityAPI.Beans
         {
             if (m_changeListeners != null)
                 m_changeListeners(booleanName, newValue);
+        }
+
+
+
+        public void Add(string name, bool defaultValue)
+        {
+            AddNewEntry(name, default);
+        }
+
+        public uint GetBooleanCount()
+        {
+            return (uint)m_keysRef.Length;
+        }
+
+        public void GetValue(string name, out bool value, out bool succedToReach)
+        {
+            if (Contains(name))
+            {
+                value = GetStateOf(name).GetValue();
+                succedToReach = true;
+            }
+            else {
+                value = succedToReach = false;
+            }
+        }
+
+        public void GetFastAccess(string name, out IBooleanableRef value, out bool succedToReach)
+        {
+            DirectAccess access;
+            GetDirectionAccessToState(name, out access, out succedToReach);
+            value = access;
+        }
+
+        public void GetFastAccess(string name, out INamedBooleanableRef value, out bool succedToReach)
+        {
+            DirectAccess access;
+            GetDirectionAccessToState(name, out access, out succedToReach);
+            value = access;
+        }
+
+        public void GetHistoryAccess(string name, out IBooleanHistory value, out bool succedToReach)
+        {
+            if (Contains(name))
+            {
+                value = GetStateOf(name);
+                succedToReach = true;
+            }
+            else
+            {
+                value = null;
+                  succedToReach = false;
+            }
+        }
+
+        public void GetHistoryAccess(string name, out INamedBooleanHistory value, out bool succedToReach)
+        {
+            if (Contains(name))
+            {
+                value = GetStateOf(name);
+                succedToReach = true;
+            }
+            else
+            {
+                value = null;
+                succedToReach = false;
+            }
+        }
+
+        public void GetNamesRegistered(out IEnumerable<string> names)
+        {
+            names =  m_keysRef.AsEnumerable();
+        }
+
+        public void GetArrayCurrentState(out IArrayStateOfBooleanRegister currentStateRef)
+        {
+            currentStateRef = m_rawSaveAccess;
         }
         #endregion
     }

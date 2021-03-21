@@ -18,7 +18,8 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
 
         public void GetTime(DateTime now, out DateTime observed)
         {
-            throw new NotImplementedException();
+            observed = new DateTime(now.Year, now.Month, now.Day, m_timeOfDay.GetHourOn24HFromat(), m_timeOfDay.GetMinutes(), m_timeOfDay.GetSeconds(), m_timeOfDay.GetMilliseconds());
+            
         }
         public override string ToString()
         {

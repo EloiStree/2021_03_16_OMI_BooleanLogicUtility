@@ -12,8 +12,14 @@ namespace BooleanRegisterUtilityAPI.Interface
 
         void Add(string name, bool defaultValue);
         void Set(string name, bool value);
+        /// <summary>
+        /// Throw exception if something when wrong.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        bool GetValue(string name);
         bool Contains(string name);
-        uint  GetBooleanCount();
+        uint GetBooleanCount();
 
         void GetValue(string name, out bool value, out bool succedToReach);
         void GetFastAccess(string name, out IBooleanableRef value, out bool succedToReach);
@@ -47,6 +53,7 @@ namespace BooleanRegisterUtilityAPI.Interface
         /// <returns></returns>
         bool GetCurrentValue();
     }
+
     /// <summary>
     /// List of boolean to manipulate based on the name given.
     /// </summary>
@@ -62,18 +69,18 @@ namespace BooleanRegisterUtilityAPI.Interface
     /// </summary>
     public interface IBooleanHistory : IBooleanableRef{
 
-        bool WasSwitchToTrueRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs);
-        bool WasSwitchToFalseRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs);
+        void WasSwitchToTrueRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs);
+        void WasSwitchToFalseRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs);
 
-        bool WasSwitchToTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        bool WasSwitchToFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        bool WasSwitchToTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
-        bool WasSwitchToFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
+        void WasSwitchToTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
+        void WasSwitchToFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
+        void WasSwitchToTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
+        void WasSwitchToFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
 
-        bool WasMaintainedTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        bool WasMaintainedFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        bool WasMaintainedTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
-        bool WasMaintainedFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
+        void WasMaintainedTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
+        void WasMaintainedFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
+        void WasMaintainedTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
+        void WasMaintainedFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
 
         void GetSwitchCount(out ushort switch2True, out ushort switch2False, ITimeValue from, ITimeValue to);
         void GetSwitchCount(out ushort switch2True, out ushort switch2False, DateTime from, DateTime to);
@@ -147,6 +154,10 @@ namespace BooleanRegisterUtilityAPI.Interface
         bool IsAbsolute();
         void SetWith(IBoolTimeRange timeRange, bool isRelative);
         void SetWith(IBoolTimeKey timeRange, bool isRelative);
+        ObservedTimeType GetObservedType();
+    }
+    public enum ObservedTimeType {
+        KeyRelative, RangeRelative, KeyAbsolute, RangeAbsolute
     }
 
     public interface IBoolTimeRange

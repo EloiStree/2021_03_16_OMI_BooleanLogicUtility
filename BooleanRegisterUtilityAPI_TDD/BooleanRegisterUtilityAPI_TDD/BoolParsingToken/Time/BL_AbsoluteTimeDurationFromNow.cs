@@ -20,7 +20,8 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
 
         public void GetTime(DateTime now, out DateTime nearestOfNow, out DateTime farestOfNow)
         {
-            throw new NotImplementedException();
+            nearestOfNow = new DateTime(now.Year, now.Month, now.Day, m_timeOfDayToNowNearest.GetHourOn24HFromat(), m_timeOfDayToNowNearest.GetMinutes(), m_timeOfDayToNowNearest.GetSeconds(), m_timeOfDayToNowNearest.GetMilliseconds());
+            farestOfNow = new DateTime(now.Year, now.Month, now.Day, m_timeOfDayToNowFarest.GetHourOn24HFromat(), m_timeOfDayToNowFarest.GetMinutes(), m_timeOfDayToNowFarest.GetSeconds(), m_timeOfDayToNowFarest.GetMilliseconds());
         }
         public override string ToString()
         {

@@ -1,4 +1,5 @@
 ﻿using BooleanRegisterUtilityAPI_TDD.BoolParsingToken.LogicBlock;
+using System;
 
 namespace BooleanRegisterUtilityAPI_TDD
 {
@@ -16,5 +17,7 @@ namespace BooleanRegisterUtilityAPI_TDD
         {
             return string.Format(" [| {0} ] ", LogicBlock.JoinString(m_values));
         }
+        
+
     }
 }

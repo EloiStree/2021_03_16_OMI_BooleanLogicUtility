@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BooleanRegisterUtilityAPI.BooleanLogic;
+using BooleanRegisterUtilityAPI.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +18,7 @@ namespace BooleanRegisterUtilityAPI.BoolHistoryLib
      If I am wrong on how to desing it feel free to ping me on discord: http://eloistree.page.link/discord
          
         */
-    public class BooleanRawRegister
+    public class BooleanRawRegister : IArrayStateOfBooleanRegister
     {
         public enum Size : uint { _4x4 = 4 * 4, _16x16 = 16 * 16, _32x32 = 32 * 32, _64x64 = 64 * 64, _128x128 = 128 * 128, _256x256 = 256 * 256, _512x512 = 512 * 512, _1024x1024 = 1024 * 1024 }
         // 16 > 256 > 1024 > 4096 > 16.384 > 65.536 > 1.048.576
@@ -163,10 +165,26 @@ namespace BooleanRegisterUtilityAPI.BoolHistoryLib
             {
                 if (booleanName == m_booleanClaimedArray[i].ToLower().Trim())
                 {
-                    return new DirectAccess( this, i);
+                    return new DirectAccess(this, i);
                 }
             }
             return null;
+
+        }
+        public void GetBooleanIntIndex(string booleanName, out bool found, out uint index)
+        {
+
+            booleanName = booleanName.ToLower().Trim();
+            for (uint i = 0; i < m_booleanClaimedArray.Length; i++)
+            {
+                if (booleanName == m_booleanClaimedArray[i].ToLower().Trim())
+                {
+                    index = i;
+                    found = true;
+                }
+            }
+            index = 0;
+            found = false;
 
         }
         public bool IsBooleanReferenceExist(string booleanName)
@@ -224,9 +242,74 @@ namespace BooleanRegisterUtilityAPI.BoolHistoryLib
             }
         }
 
+        public uint GetArraySize()
+        {
+            return (uint) m_size;
+        }
 
+        public bool[] GetValuesCopy()
+        {
+            bool[] copy = new bool[0];
+            m_booleanArray.CopyTo(copy, 0);
+            return copy;
+        }
 
-        public class DirectAccess
+        public string[] GetIndexNamesCopy()
+        {
+            string[] copy = new string[0];
+            m_booleanClaimedArray.CopyTo(copy, 0);
+            return copy;
+        }
+
+        public void GetValuesRef(ref bool[] value)
+        {
+            value = m_booleanArray;
+        }
+
+        public void GetIndexNamesREf(ref string[] value)
+        {
+            value = m_booleanClaimedArray;
+        }
+
+        public void GetWith(uint index, out IBooleanFastAccess access, out bool found)
+        {
+            if (index < 0 || index >= m_booleanArray.Length) {
+                found = false;
+                access = null;
+                return;
+            }
+            found = true;
+            BooleanRawRegister r = this;
+            access = new DirectAccess(ref r, index);
+
+        }
+
+        public void GetWith(string name, out IBooleanFastAccess access, out bool found)
+        {
+            uint index;
+            GetBooleanIntIndex(name, out found, out index);
+            if (!found) {
+                access = null;
+            }
+            else { 
+
+                 GetWith(index, out access, out found);
+            }
+        }
+
+        public bool Exists(uint index)
+        {
+            return index >= 0 && index < GetArraySize();
+        }
+
+        public bool Exists(string name)
+        {
+            bool found;uint index;
+            GetBooleanIntIndex(name, out found, out index);
+            return found;
+        }
+
+        public class DirectAccess : INamedBooleanableRef , IBooleanFastAccess
         {
              BooleanRawRegister m_rawRegister;
              uint m_index;
@@ -264,6 +347,20 @@ namespace BooleanRegisterUtilityAPI.BoolHistoryLib
             public bool IsValide()
             {
                 return  IsRegisteExist() && IsIndexInRange();
+            }
+
+            public void GetBooleanableState(out bool value, out bool wasBooleanable)
+            {
+                wasBooleanable = IsValide();
+                if(wasBooleanable)
+                    value = GetState();
+                else
+                    value = false;
+            }
+
+            public bool GetCurrentValue()
+            {
+                return GetState();
             }
         }
     }

@@ -20,7 +20,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Unstore
 
         public void GetTime(DateTime now, out DateTime observed)
         {
-            throw new NotImplementedException();
+            observed = now.AddSeconds(m_relativeToNow.GetAsSeconds());
         }
 
         public override string ToString()

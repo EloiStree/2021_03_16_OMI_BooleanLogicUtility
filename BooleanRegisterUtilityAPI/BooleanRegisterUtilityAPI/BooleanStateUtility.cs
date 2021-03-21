@@ -57,7 +57,7 @@ namespace BooleanRegisterUtilityAPI
             {
                 if (registre.Contains(booleanTracked[i].GetName()))
                 {
-                    bool isOn = registre.GetValueOf(booleanTracked[i].GetName());
+                    bool isOn = registre.GetValue(booleanTracked[i].GetName());
                     if (booleanTracked[i].IsRequestingActive() && isOn)
                     {
                         return true;
@@ -125,7 +125,7 @@ namespace BooleanRegisterUtilityAPI
                 {
                     if (register.Contains(observedState[i].GetName()))
                     {
-                        bool isOnState = register.GetValueOf(observedState[i].GetName());
+                        bool isOnState = register.GetValue(observedState[i].GetName());
                         if (observedState[i].IsRequestingActive() && isOnState)
                         {
                             found++;
@@ -253,7 +253,7 @@ namespace BooleanRegisterUtilityAPI
             {
                 if (registre.Contains(booleanTracked[i].GetName()))
                 {
-                    bool isOn = registre.GetValueOf(booleanTracked[i].GetName());
+                    bool isOn = registre.GetValue(booleanTracked[i].GetName());
                     if (isOn == true && booleanTracked[i].IsRequestingInverse())
                     {
                         return false;

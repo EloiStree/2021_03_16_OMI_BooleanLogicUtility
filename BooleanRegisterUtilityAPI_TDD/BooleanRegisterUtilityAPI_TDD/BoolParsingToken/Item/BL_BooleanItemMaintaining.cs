@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
 {
-    class BL_BooleanItemMaintaining : BL_BooleanItemWithObservedTime
+    public class BL_BooleanItemMaintaining : BL_BooleanItemWithObservedTime
     {
         public BoolState m_switchObserved;
+   
 
         public BL_BooleanItemMaintaining(string boolNamedId, IBoolObservedTime observedTime, BoolState booleanSwitchType) : base(boolNamedId, observedTime)
         {

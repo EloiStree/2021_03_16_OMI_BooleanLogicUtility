@@ -17,6 +17,8 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
             m_timeObserved = observedTime;
 
         }
+
+
         public IBoolObservedTime GetObservedTime()
         {
             return m_timeObserved;

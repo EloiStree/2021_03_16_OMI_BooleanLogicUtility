@@ -1,4 +1,5 @@
 ﻿using BooleanRegisterUtilityAPI_TDD.BoolParsingToken.LogicBlock;
+using System;
 
 namespace BooleanRegisterUtilityAPI_TDD
 {
@@ -34,6 +35,7 @@ namespace BooleanRegisterUtilityAPI_TDD
             computed = true;
             value = BoolOperationLogic.Domino(mt, mf);
         }
+      
 
         public override string ToString()
         {

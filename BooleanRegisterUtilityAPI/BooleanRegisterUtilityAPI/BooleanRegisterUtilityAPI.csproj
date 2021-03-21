@@ -53,6 +53,7 @@
     <Compile Include="BooleanLogic\Time\TimeInMsUnsignedShort.cs" />
     <Compile Include="BooleanLogic\Time\TimeInTimespan.cs" />
     <Compile Include="BooleanLogic\Unstored\BooleanableToRegisterLink.cs" />
+    <Compile Include="BoolHistoryLib\RelativeTruncatedBoolHistory.cs" />
     <Compile Include="Interface\IBooleanStorage.cs" />
     <Compile Include="Main\BooleanStateRegister.cs" />
     <Compile Include="Beans\NamedBooleanChangeTimed.cs" />

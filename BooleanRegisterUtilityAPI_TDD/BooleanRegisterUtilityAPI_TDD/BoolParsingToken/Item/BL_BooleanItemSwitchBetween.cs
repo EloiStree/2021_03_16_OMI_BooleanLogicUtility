@@ -12,6 +12,8 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken.Item
     public class BL_BooleanItemSwitchBetween : BL_BooleanItemWithObservedTime
     {
         public BooleanSwitchType m_switchObserved;
+        private string v;
+
 
         public BL_BooleanItemSwitchBetween(string boolNamedId, IBoolObservedTime observedTime, BooleanSwitchType booleanSwitchType) : base(boolNamedId, observedTime)
         {
