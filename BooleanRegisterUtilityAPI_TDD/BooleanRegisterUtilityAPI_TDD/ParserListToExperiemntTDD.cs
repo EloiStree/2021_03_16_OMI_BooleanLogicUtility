@@ -85,13 +85,14 @@ namespace BooleanRegisterUtilityAPI_TDD
             "shift⏱-800ms#0#1000",//Is shift true for less that 800ms on this range of time 0-1s relative to now
             "shift⏱+800ms#0#1000",//Is shift true for more  that 800ms on this range of time 0-1s relative to now
           
+            "shift⤓200", //switch true since 200ms and still true
+            "shift⤒200",//switch false since 200ms and still false
+           
             //example of use
             "shift + (mouseleft + mouseright⊓2#0#1500)",
             "!shift + (mouseleft + mouseright⊓2#0#1500)",
 
             "mouseright%75#0#2000", // is user maintaining almost all of the time
-            "( mouseright⊔2#0#3000)",
-            "( mouseright⊔2#0#3000)",
             "( mouseright⊔2#0#3000)",
              ""
 

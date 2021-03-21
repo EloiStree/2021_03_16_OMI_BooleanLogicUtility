@@ -14,7 +14,7 @@ namespace BooleanRegisterUtilityAPI_TDD
             this.m_booleanItemIsTrueOrFalseAt = booleanItemIsTrueOrFalse;
         }
 
-        public override bool IsNotTimeUsefulForComputing()
+        public override bool IsTimeNotUsefulForComputing()
         {
             return true;
         }

@@ -29,7 +29,7 @@ namespace BooleanRegisterUtilityAPI_TDD
             Get(out value, out computed);
         }
 
-        public override bool IsNotTimeUsefulForComputing()
+        public override bool IsTimeNotUsefulForComputing()
         {
             return false;
         }

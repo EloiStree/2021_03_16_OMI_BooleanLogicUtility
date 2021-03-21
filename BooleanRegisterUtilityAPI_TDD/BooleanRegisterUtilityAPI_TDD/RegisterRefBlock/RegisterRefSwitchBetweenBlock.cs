@@ -13,7 +13,7 @@ namespace BooleanRegisterUtilityAPI_TDD
         {
             this.m_booleanItemSwitchBetween = booleanItemSwitchBetween;
         }
-        public override bool IsNotTimeUsefulForComputing()
+        public override bool IsTimeNotUsefulForComputing()
         {
             return true;
         }

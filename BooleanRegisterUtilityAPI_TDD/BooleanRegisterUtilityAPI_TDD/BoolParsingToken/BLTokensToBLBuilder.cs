@@ -71,6 +71,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
             ExtractBooleanName(textOfItem, out boolName);
             string boolmeta = textOfItem.Substring(boolName.Length).Trim();
             Console.WriteLine("DD:" + boolName + " -- " + boolmeta);
+            string[] metaTokens = boolmeta.Split('#');
 
             if (boolName.Trim().Length == 0)
                 return;
@@ -94,7 +95,7 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
                     bItem = new BL_BooleanItemExist(boolName, BoolExistanceState.DontExist);
                     manadged = true;
                 }
-                else if (boolmeta[0] == '‾'  || boolmeta[0] == '↑')
+                else if (boolmeta[0] == '‾' || boolmeta[0] == '↑')
                 {
                     bItem = new BL_BooleanItemIsTrueOrFalse(boolName, false);
                     manadged = true;
@@ -104,6 +105,8 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
                     bItem = new BL_BooleanItemIsTrueOrFalse(boolName, true);
                     manadged = true;
                 }
+
+
             }
             else if (boolmeta.Length == 2)
             {
@@ -121,7 +124,8 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
                 string timevalue = boolmeta.Substring(1);
                 IBoolObservedTime timeObserved = ParseTimeObserved(timevalue);
 
-                if (timeObserved != null) { 
+                if (timeObserved != null)
+                {
 
                     if (boolmeta[0] == '_' || boolmeta[0] == '‾')
                     {
@@ -131,14 +135,73 @@ namespace BooleanRegisterUtilityAPI_TDD.BoolParsingToken
 
                     else if (boolmeta[0] == '↓' || boolmeta[0] == '↑')
                     {
-                        bItem = new BL_BooleanItemSwitchBetween(boolName, timeObserved, checktype == '↓');
+                        bItem = new BL_BooleanItemSwitchBetween(boolName, SwitchTrackedType.SwitchRecently, timeObserved, checktype == '↓');
                         manadged = true;
+                    }
+                    else if (boolmeta[0] == '⤒' || boolmeta[0] == '⤓')
+                    {
+                        bItem = new BL_BooleanItemSwitchBetween(boolName, SwitchTrackedType.SwitchAndStayActive, timeObserved, checktype == '⤓');
+                        manadged = true;
+                    }
+                    else if (boolmeta[0] == '⊓' || boolmeta[0] == '⊔')
+                    {
+                        if (metaTokens.Length == 3)
+                        {
+
+                            string m = metaTokens[0];
+                            BumpOrHole bumpType = checktype == '⊓' ? BumpOrHole.Bump : BumpOrHole.Hole;
+                            ObservedBumpType obt = ObservedBumpType.Equal;
+                            if (m.IndexOf('-') > -1) obt = ObservedBumpType.LessOrEqual;
+                            if (m.IndexOf('+') > -1) obt = ObservedBumpType.MoreOrEqual;
+                            m = m.Replace("+", "").Replace("-", "").Replace("⊔", "").Replace("⊓", "");
+                            int count = 0;
+                            int.TryParse(m, out count);
+
+                            IBoolObservedTime t = ParseTimeObserved(metaTokens[1] + "#" + metaTokens[2]);
+                            bItem = new BL_BooleanItemBumpsInRange(boolName, obt, bumpType, count, t);
+
+                            manadged = true;
+                        }
+                    }
+                    else if (boolmeta[0] == '%')
+                    {
+                        if (metaTokens.Length == 3)
+                        {
+                            string m = metaTokens[0];
+                            BoolState bs = BoolState.True;
+                            if (m.IndexOf('!') > -1)
+                                bs = BoolState.False;
+                            m = m.Replace("!", "").Replace("%", "");
+                            double count = 0;
+                            double.TryParse(m, out count);
+
+                            IBoolObservedTime t = ParseTimeObserved(metaTokens[1] + "#" + metaTokens[2]);
+                            bItem = new BL_BooleanItemPourcentStateInRange(boolName, bs, count, t);
+
+                            manadged = true;
+                        }
+                    }
+                    else if (boolmeta[0] == '⏱')
+                    {
+                        if (metaTokens.Length == 3)
+                        {
+                            string m = metaTokens[0];
+                            ObserveTimeCountType ot = ObserveTimeCountType.LessThatTime;
+                            if (m.IndexOf('+') > -1) ot = ObserveTimeCountType.MoreThatTime;
+                            m = m.Replace("+", "").Replace("-", "").Replace("⏱", "");
+
+                            ITimeValue tv = GetTimeOf(m);
+                            IBoolObservedTime t = ParseTimeObserved(metaTokens[1] + "#" + metaTokens[2]);
+                            bItem = new BL_BooleanItemTimeCountInRange(boolName, ot, tv, t);
+
+                            manadged = true;
+                        }
                     }
                 }
             }
 
 
-            found = bItem != null;
+                    found = bItem != null;
         }
 
         private IBoolObservedTime ParseTimeObserved(string timevalue)

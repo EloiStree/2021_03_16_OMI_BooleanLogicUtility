@@ -120,6 +120,7 @@ namespace BooleanRegisterUtilityAPI.Interface
 
     public interface ITimeValue {
         void  SetAsMilliSeconds(double valueInMs);
+        void GetAsMilliSeconds(out long valueInMs);
         double GetAsMilliSeconds();
         double GetAsSeconds();
         double GetAsMinutes();

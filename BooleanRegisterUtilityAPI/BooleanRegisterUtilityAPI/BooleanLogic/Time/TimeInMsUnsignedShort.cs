@@ -28,5 +28,10 @@ namespace BooleanRegisterUtilityAPI.BooleanLogic.Time
         {
             return string.Format("T{0}ms", m_timeInMilliSeconds);
         }
+
+        public void GetAsMilliSeconds(out long valueInMs)
+        {
+            valueInMs = m_timeInMilliSeconds;
+        }
     }
 }
