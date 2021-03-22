@@ -69,24 +69,55 @@ namespace BooleanRegisterUtilityAPI.Interface
     /// </summary>
     public interface IBooleanHistory : IBooleanableRef{
 
-        void WasSwitchToTrueRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs);
-        void WasSwitchToFalseRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs);
+        void WasSwitchTo(bool stateObserved, out bool result,  ITimeValue from, ITimeValue to);
 
-        void WasSwitchToTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        void WasSwitchToFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        void WasSwitchToTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
-        void WasSwitchToFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
+        void WasSwitchToTrue(out bool result,  ITimeValue from, ITimeValue to);
+        void WasSwitchToTrue(out bool result,  DateTime now, DateTime from, DateTime to);
+        void WasSwitchToTrue(out bool result,  DateTime from, DateTime to);
 
-        void WasMaintainedTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        void WasMaintainedFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to);
-        void WasMaintainedTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
-        void WasMaintainedFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to);
+        void WasSwitchToFalse(out bool result,  ITimeValue from, ITimeValue to);
+        void WasSwitchToFalse(out bool result,  DateTime now, DateTime from, DateTime to);
+        void WasSwitchToFalse(out bool result,  DateTime from, DateTime to);
+
+
+
+        void WasMaintained(bool stateObserved, out bool result,  ITimeValue from, ITimeValue to);
+
+        void WasMaintainedTrue(out bool result, ITimeValue from, ITimeValue to);
+        void WasMaintainedTrue(out bool result, DateTime now, DateTime from, DateTime to);
+        void WasMaintainedTrue(out bool result,  DateTime from, DateTime to);
+
+        void WasMaintainedFalse(out bool result, ITimeValue from, ITimeValue to);
+        void WasMaintainedFalse(out bool result, DateTime now, DateTime from, DateTime to);
+        void WasMaintainedFalse(out bool result, DateTime from, DateTime to);
 
         void GetSwitchCount(out ushort switch2True, out ushort switch2False, ITimeValue from, ITimeValue to);
+        void GetSwitchCount(out ushort switch2True, out ushort switch2False, DateTime now, DateTime from, DateTime to);
         void GetSwitchCount(out ushort switch2True, out ushort switch2False, DateTime from, DateTime to);
 
-        void GetState(out bool value, out bool succedToAnwser, ITimeValue when);
-        void GetState(out bool value, out bool succedToAnwser, DateTime when);
+
+        void GetPoucentOfState(bool stateObserved, out double pourcentState, ITimeValue from, ITimeValue to);
+        void GetPoucentOfState(bool stateObserved, out double pourcentState, DateTime now, DateTime from, DateTime to);
+        void GetPoucentOfState(bool stateObserved, out double pourcentState, DateTime from, DateTime to);
+
+
+        void GetBumpsCount(AllBumpType bumb, out uint count, ITimeValue from, ITimeValue to);
+        void GetBumpsCount(AllBumpType bumb, out uint count, DateTime now, DateTime from, DateTime to);
+        void GetBumpsCount(AllBumpType bumb, out uint count, DateTime from, DateTime to);
+
+
+
+        void GetTimeCount(bool stateObserved, out ulong timeFound, ITimeValue from, ITimeValue to);
+        void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime now, DateTime from, DateTime to);
+        void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime from, DateTime to);
+
+
+        void GetState(out bool value,  ITimeValue when);
+        void GetState(out bool value,  DateTime now, DateTime when);
+        void GetState(out bool value,  DateTime when);
+
+
+
 
     }
 

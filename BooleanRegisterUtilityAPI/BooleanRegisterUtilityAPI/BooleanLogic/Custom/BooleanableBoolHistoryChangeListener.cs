@@ -26,11 +26,12 @@ namespace BooleanRegisterUtilityAPI.BooleanLogic.Custom
 
             if (m_target == null) return;
 
-            if (base.GetSwitchType() == BoolSwitchType.SwtichToTrue)
-                value = m_target.WasSetTrue(GetTimeObservedInSecond(), true);
-            if (base.GetSwitchType() == BoolSwitchType.SwitchToFalse)
-                value = m_target.WasSetFalse(GetTimeObservedInSecond(),true);
-            wasBooleanable = true;
+            throw new NotImplementedException();
+            //if (base.GetSwitchType() == BoolSwitchType.SwtichToTrue)
+            //    value = m_target.WasSwitchToTrue(GetTimeObservedInSecond(), true);
+            //if (base.GetSwitchType() == BoolSwitchType.SwitchToFalse)
+            //    value = m_target.WasSwitchToFalse(GetTimeObservedInSecond(),true);
+            //wasBooleanable = true;
         }
 
         public BoolHistory GetLinkedHistory()

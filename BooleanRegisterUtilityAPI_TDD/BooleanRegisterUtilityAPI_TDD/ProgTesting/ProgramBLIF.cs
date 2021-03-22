@@ -43,10 +43,6 @@ namespace BooleanRegisterUtilityAPI_TDD
                 left.Get(out bleft, out valide);
                 right.Get(out bright, out valide);
 
-                register.Set("up", up.GetBool());
-                register.Set("down", down.GetBool());
-                register.Set("left", left.GetBool());
-                register.Set("right", right.GetBool());
 
                 Console.WriteLine(string.Format("INPUT: u{0} d{1} l{2} r{3}", bup, bdown, bleft, bright));
 

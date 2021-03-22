@@ -10,7 +10,7 @@ namespace BooleanRegisterUtilityAPI
     public class BooleanTextDebugUtility {
 
 
-        public static void GetTextDescriptionOfRegister(ref BooleanStateRegister register, out string resultText, int clampLenght=50) {
+        public static void GetTextDescriptionOfRegister(ref BooleanStateRegister register,  out string resultText, int clampLenght=50) {
 
             StringBuilder sb = new StringBuilder();
             List<BooleanNamedHistory> stateRef;

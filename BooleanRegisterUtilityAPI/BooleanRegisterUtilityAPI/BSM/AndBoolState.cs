@@ -1,5 +1,5 @@
-﻿using BooleanRegisterUtilityAPI.Beans;
-using BooleanRegisterUtilityAPI.Exception;
+﻿using BooleanRegisterUtilityAPI.ApiException;
+using BooleanRegisterUtilityAPI.Beans;
 using System;
 using System.Collections;
 using System.Collections.Generic;

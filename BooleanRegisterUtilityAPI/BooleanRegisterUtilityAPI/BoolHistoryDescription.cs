@@ -56,7 +56,7 @@ public class BoolHistoryDescription
         return result;
     }
 
-    public static string GetDescriptionNowToPast(BoolHistory h, float timeWatch = 1f, float dotPerSecond = 4, string falseSym = "_", string trueSym = "‾", string switchTrueSym = "1↓", string switchFalseSym = "0↑")
+    public static string GetDescriptionNowToPast(BoolHistory h, float timeWatch = 1f, float dotPerSecond = 4, string falseSym = "_", string trueSym = "‾", string switchTrueSym = "↓", string switchFalseSym = "↑")
     {
         BoolStatePeriode[] history;
         h.GetFromNowToPast(out history, false);
@@ -66,7 +66,7 @@ public class BoolHistoryDescription
         return result;
     }
 
-    public static string GetDescriptionNowToPast(BoolStatePeriode[] history , float timeWatch = 1f,  float dotPerSecond = 4, string falseSym = "_", string trueSym = "‾", string switchTrueSym = "1↓", string switchFalseSym = "0↑")
+    public static string GetDescriptionNowToPast(BoolStatePeriode[] history , float timeWatch = 1f,  float dotPerSecond = 4, string falseSym = "_", string trueSym = "‾", string switchTrueSym = "↓", string switchFalseSym = "↑") //🁤🁪 1↓ 0↑
     {
         if (history == null || history.Length == 0) {
             return "none";
@@ -99,7 +99,7 @@ public class BoolHistoryDescription
         return result;
     }
 
-    public static string GetNumericDescriptionNowToPast(BoolHistory h, float timeWatch = 1f, string switchTrueSym = "↓", string switchFalseSym = "↑")
+    public static string GetNumericDescriptionNowToPast(BoolHistory h, float timeWatch = 1f, string switchTrueSym = "‾", string switchFalseSym = "_")
     {
         bool watcherUse = false;
         double timePast = 0;
@@ -107,13 +107,10 @@ public class BoolHistoryDescription
         BoolStatePeriode[] history;
         h.GetFromNowToPast(out history, false);
 
-        result += string.Format("{0:0.00}{1}", h.GetInProgressState().GetElpasedTimeAsSecond(), (h.GetState() ? switchTrueSym : switchFalseSym));
-
-
         for (int i = 0; i < history.Length; i++)
         {
 
-            result += string.Format("{0:0.00}{1}", history[i].GetElpasedTimeAsSecond(), (history[i].GetState() ? switchTrueSym : switchFalseSym));
+            result += string.Format("{1}{1}{0:0}{1}{1}", history[i].GetElpasedTimeAsLongMs(), (history[i].GetState() ? switchTrueSym : switchFalseSym));
             timePast += history[i].GetElpasedTimeAsSecond();
 
             if (!watcherUse && timePast > timeWatch)

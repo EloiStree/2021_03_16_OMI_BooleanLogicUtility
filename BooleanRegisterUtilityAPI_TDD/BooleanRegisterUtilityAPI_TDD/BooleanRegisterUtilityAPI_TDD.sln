@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooleanRegisterUtilityAPI_T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooleanRegisterUtilityAPI", "..\..\BooleanRegisterUtilityAPI\BooleanRegisterUtilityAPI\BooleanRegisterUtilityAPI.csproj", "{74FDA8F1-0D04-4E85-8C80-58CD24DC0CB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BooleanRegisterUtilityUnitTDD", "..\..\BooleanRegisterUtilityUnitTDD\BooleanRegisterUtilityUnitTDD.csproj", "{69397441-1320-4F24-91EE-46EB705608DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{74FDA8F1-0D04-4E85-8C80-58CD24DC0CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74FDA8F1-0D04-4E85-8C80-58CD24DC0CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74FDA8F1-0D04-4E85-8C80-58CD24DC0CB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69397441-1320-4F24-91EE-46EB705608DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69397441-1320-4F24-91EE-46EB705608DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69397441-1320-4F24-91EE-46EB705608DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69397441-1320-4F24-91EE-46EB705608DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

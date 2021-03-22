@@ -34,7 +34,7 @@ namespace BooleanRegisterUtilityAPI
         {
             m_now = DateTime.Now;
             float timePast = (float)(m_now - m_lastCheck).TotalSeconds;
-            m_register.AddElapsedTimeToAll(timePast);
+            m_register.AddSecondsElapsedTimeToAll(timePast);
 
             m_lastCheck = m_now;
         }

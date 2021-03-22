@@ -42,9 +42,9 @@ namespace BooleanRegisterUtilityAPI
             {
                 DateTime t;
                 time.GetTimeKey().GetTime(when, out t);
-                bool state, computedstate;
-                history.GetState(out state, out computedstate, t);
-                computed = computedstate;
+                bool state;
+                history.GetState(out state, t);
+                computed = true;
                 value = state == (m_booleanItemIsTrueOrFalseAt.m_stateObserved == BoolState.True);
                 return;
 
@@ -55,9 +55,9 @@ namespace BooleanRegisterUtilityAPI
                 DateTime t1, t2;
                 time.GetTimeRange().GetTime(when, out t1, out t2);
 
-                bool state, computedstate;
-                history.WasMaintainedTrue(out state, out computedstate, t1, t2);
-                computed = computedstate;
+                bool state;
+                history.WasMaintainedTrue(out state, t1, t2);
+                computed = true;
                 value = state == (m_booleanItemIsTrueOrFalseAt.m_stateObserved == BoolState.True);
                 return;
 

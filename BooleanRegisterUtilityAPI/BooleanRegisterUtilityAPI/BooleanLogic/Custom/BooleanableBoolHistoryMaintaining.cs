@@ -39,7 +39,7 @@ namespace BooleanRegisterUtilityAPI.BooleanLogic.Custom
                 return;
             }
 
-            float time = m_target.GetInProgressState().GetElpasedTimeAsSecond();
+            double time = m_target.GetInProgressState().GetElpasedTimeAsSecond();
 
             value = time < base.GetTimeObservedInSecond();
             wasBooleanable = true;

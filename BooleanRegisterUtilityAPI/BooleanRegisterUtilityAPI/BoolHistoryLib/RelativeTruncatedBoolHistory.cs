@@ -81,7 +81,7 @@ public class RelativeTruncatedBoolHistory
         return !GetStartState() && f > 0;
     }
 
-    public void GetSwitchCountAndState(out bool startState, out bool endState, out int trueCount, out int falseCount)
+    public void GetSwitchCountAndState(out bool startState, out bool endState, out ushort trueCount, out ushort falseCount)
     {
         startState = GetStartState();
         endState = GetEndState();
@@ -150,7 +150,7 @@ public class RelativeTruncatedBoolHistory
         bool isInRange;
         do
         {
-            currentPeriodeMs = m_foundFromNowToPast[i].GetElpasedTimeAsLong();
+            currentPeriodeMs = m_foundFromNowToPast[i].GetElpasedTimeAsLongMs();
 
             start = end;
             end += currentPeriodeMs;
@@ -199,7 +199,7 @@ public class RelativeTruncatedBoolHistory
         int i = 0;
         do
         {
-            currentPeriodeMs = m_foundFromNowToPast[i].GetElpasedTimeAsLong();
+            currentPeriodeMs = m_foundFromNowToPast[i].GetElpasedTimeAsLongMs();
             if (m_foundFromNowToPast[i].GetState())
                 trueCountInMs += currentPeriodeMs;
            else
@@ -287,9 +287,114 @@ public class RelativeTruncatedBoolHistory
     {
         return m_origine;
     }
+
+
+    public void GetBumpsCount(AllBumpType type, out uint count, ITimeValue from, ITimeValue to) {
+        count = 0;
+        switch (type)
+        {
+            case AllBumpType.GroundBump:
+                GetBumpsCount(out count, from, to);
+                break;
+            case AllBumpType.GroundHole:
+                GetHolesCount(out count, from, to);
+                break;
+            case AllBumpType.CeilingBump:
+                GetCeilingBumpsCount(out count, from, to);
+                break;
+            case AllBumpType.CeilingHole:
+                GetCeilingHolesCount(out count, from, to);
+                break;
+            default:
+                break;
+        }
+    }
+    public void GetBumpsCount( out uint bumbs, ITimeValue from, ITimeValue to)
+    {
+        bumbs = 0;
+        if (GetSwitchCount() < 2)
+        {
+            return;
+        }
+
+        bool isup = false;
+        BoolStatePeriode current;
+        for (int i = 0; i < m_foundFromNowToPast.Count - 1; i++)
+        {
+
+            if (m_foundFromNowToPast[i].GetState() == false &&
+                m_foundFromNowToPast[i + 1].GetState() == true)
+            {
+                bumbs++;
+            }
+            
+        }
+    }
+    public void GetHolesCount( out uint holes, ITimeValue from, ITimeValue to)
+    {
+        holes = 0;
+        if (GetSwitchCount() < 2)
+        {
+            return;
+        }
+
+        bool isup = false;
+        BoolStatePeriode current;
+        for (int i = 0; i < m_foundFromNowToPast.Count - 1; i++)
+        {
+
+           
+            if (m_foundFromNowToPast[i].GetState() == true &&
+                m_foundFromNowToPast[i + 1].GetState() == false)
+            {
+                holes++;
+            }
+        }
+    }
+    public void GetCeilingBumpsCount( out uint bumbs , ITimeValue from, ITimeValue to)
+    {
+        bumbs  = 0;
+        if (GetSwitchCount() < 2)
+        {
+            return;
+        }
+
+        bool isup = false;
+        BoolStatePeriode current;
+        for (int i = 0; i < m_foundFromNowToPast.Count - 1; i++)
+        {
+
+            if (m_foundFromNowToPast[i].GetState() == true &&
+                m_foundFromNowToPast[i + 1].GetState() == false)
+            {
+                bumbs++;
+            }
+        }
+    }
+    public void GetCeilingHolesCount( out uint holes, ITimeValue from, ITimeValue to)
+    {
+         holes = 0;
+        if (GetSwitchCount() < 2)
+        {
+            return;
+        }
+
+        bool isup = false;
+        BoolStatePeriode current;
+        for (int i = 0; i < m_foundFromNowToPast.Count - 1; i++)
+        {
+
+            if (m_foundFromNowToPast[i].GetState() == false &&
+                m_foundFromNowToPast[i + 1].GetState() == true)
+            {
+                holes++;
+            }
+            
+        }
+    }
 }
 
-
+public enum AllBumpType { GroundBump,GroundHole, CeilingBump, CeilingHole}
 
 public enum BumpGroundType { GroundFalse, GroundTrue }
 public enum HoleType { CeilingHole, CliffHole }
@@ -303,7 +408,7 @@ public class BinaryBump
     public BinaryBump(BoolStatePeriode targetPeriode)
     {
         m_bumpState = targetPeriode.GetState() ;
-        m_duration = new TimeInMsLong( targetPeriode.GetElpasedTimeAsLong() );
+        m_duration = new TimeInMsLong( targetPeriode.GetElpasedTimeAsLongMs() );
     }
 
     public bool GetBumpValue() { return m_bumpState; }
@@ -322,7 +427,7 @@ public class BinaryHole
     public BinaryHole(BoolStatePeriode targetPeriode)
     {
         m_holeState = targetPeriode.GetState();
-        m_duration = new TimeInMsLong(targetPeriode.GetElpasedTimeAsLong());
+        m_duration = new TimeInMsLong(targetPeriode.GetElpasedTimeAsLongMs());
     }
 
     public bool GetHoleValue() { return m_holeState; }

@@ -18,8 +18,8 @@ public class BoolStatePeriode
     public void SetStateTo(bool value) { m_state = GetChangeType(value); }
     public void SetStateTo(BooleanChangeType value) { m_state = value; }
     public bool GetState() { return m_state == BooleanChangeType.SetTrue; }
-    public double GetElpasedTimeAsSecond() { return m_elapsedTimeMs/1000.0; }
-    public long GetElpasedTimeAsLong() { return m_elapsedTimeMs; }
+    public double GetElpasedTimeAsSecond() { return ((double)m_elapsedTimeMs)/1000.0; }
+    public long GetElpasedTimeAsLongMs() { return m_elapsedTimeMs; }
 
     public void AddSomeElapsedTime(long timeInMs)
     {

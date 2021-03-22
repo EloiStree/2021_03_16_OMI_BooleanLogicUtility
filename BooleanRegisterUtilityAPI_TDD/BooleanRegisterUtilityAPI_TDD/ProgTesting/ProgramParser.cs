@@ -1,4 +1,5 @@
-﻿using BooleanRegisterUtilityAPI.BoolParsingToken;
+﻿
+using BooleanRegisterUtilityAPI.BoolParsingToken;
 using BooleanRegisterUtilityAPI.BoolParsingToken.Item.Builder;
 using System;
 using System.Collections.Generic;

@@ -48,12 +48,12 @@ namespace BooleanRegisterUtilityAPI
 
                 if (m_booleanItemSwitchBetween.m_switchObserved == BooleanSwitchType.SetAsTrue)
                 {
-                    history.WasSwitchToTrue(out value, out computed, t1, t2);
+                    history.WasSwitchToTrue(out value,  t1, t2);
                     return;
                 }
                 if (m_booleanItemSwitchBetween.m_switchObserved == BooleanSwitchType.SetAsFalse)
                 {
-                    history.WasSwitchToFalse(out value, out computed, t1, t2);
+                    history.WasSwitchToFalse(out value,  t1, t2);
                     return;
                 }
 

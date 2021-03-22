@@ -65,7 +65,7 @@ namespace BooleanRegisterUtilityAPI_TDD
             {
                 now = DateTime.Now;
                 timepast = (float)(now - previous).TotalSeconds;
-                m_register.AddElapsedTimeToAll(timepast);
+                m_register.AddSecondsElapsedTimeToAll(timepast);
                 previous = now;
             }
 

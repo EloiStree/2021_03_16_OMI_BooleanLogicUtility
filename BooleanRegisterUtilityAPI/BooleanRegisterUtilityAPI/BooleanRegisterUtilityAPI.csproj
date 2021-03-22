@@ -52,6 +52,7 @@
     <Compile Include="BooleanLogic\Time\TimeInMsLong.cs" />
     <Compile Include="BooleanLogic\Time\TimeInMsUnsignedShort.cs" />
     <Compile Include="BooleanLogic\Time\TimeInTimespan.cs" />
+    <Compile Include="BooleanLogic\Time\ZeroTime.cs" />
     <Compile Include="BooleanLogic\Unstored\BooleanableToRegisterLink.cs" />
     <Compile Include="BoolHistoryLib\RelativeTruncatedBoolHistory.cs" />
     <Compile Include="BoolParsingToken\BLTokensToBLBuilder.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="RegisterRefBlock\TimeLogicBlock.cs" />
     <Compile Include="TextToBoolStateMachineParser.cs" />
     <Compile Include="BooleanTextDebugUtility.cs" />
+    <Compile Include="Timer\BooleanStateRegisterTimeTracker.cs" />
     <Compile Include="Timer\DeltaTimeToBooleanStateRegister.cs" />
     <Compile Include="What\Modificator.cs" />
   </ItemGroup>

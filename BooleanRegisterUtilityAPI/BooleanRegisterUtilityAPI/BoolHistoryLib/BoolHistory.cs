@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class BoolHistory
+public class BoolHistory : IBooleanHistory
 {
     #region CORE
     #region SURE
@@ -31,7 +31,7 @@ public class BoolHistory
         long t = 0;
         for (int i = 0; i < m_switchesTracks.Count; i++)
         {
-            t += m_switchesTracks[i].GetElpasedTimeAsLong();
+            t += m_switchesTracks[i].GetElpasedTimeAsLongMs();
 
         }
         return t;
@@ -46,7 +46,7 @@ public class BoolHistory
         time.GetAsMilliSeconds(out ms);
         GetInProgressState().AddSomeElapsedTime(ms);
     }
-    public void AddElapsedTime(long timeInMs)
+    public void AddMilliSecondElapsedTime(long timeInMs)
     {
         GetInProgressState().AddSomeElapsedTime(timeInMs);
     }
@@ -142,7 +142,7 @@ public class BoolHistory
         bool isInRange;
         do
         {
-            currentPeriodeMs = m_switchesTracks[i].GetElpasedTimeAsLong();
+            currentPeriodeMs = m_switchesTracks[i].GetElpasedTimeAsLongMs();
 
             start = end;
             end += currentPeriodeMs;
@@ -155,6 +155,12 @@ public class BoolHistory
         } while (!isInRange && i < m_switchesTracks.Count);
     }
     //Truncate an part of the history
+
+    public void GetTruncatedHistoryCopy( ITimeValue whenFromNow, out RelativeTruncatedBoolHistory truncatedHistory)
+    {
+        GetTruncatedHistoryCopy(ZeroTime.Default, whenFromNow, out truncatedHistory);
+    }
+    
     public void GetTruncatedHistoryCopy(ITimeValue nearestFromNow, ITimeValue farestFromNow, out RelativeTruncatedBoolHistory troncatedHistory)
     {
         troncatedHistory = new RelativeTruncatedBoolHistory(this, nearestFromNow, farestFromNow);
@@ -178,7 +184,7 @@ public class BoolHistory
         bool isInEndRange;
         do
         {
-            currentPeriodeMs = m_switchesTracks[i].GetElpasedTimeAsLong();
+            currentPeriodeMs = m_switchesTracks[i].GetElpasedTimeAsLongMs();
 
             start = end;
             end += currentPeriodeMs;
@@ -187,17 +193,7 @@ public class BoolHistory
 
             isInStartRange = (timeNearest >= start && timeNearest < end);
             isInEndRange = (timeFarest >= start && timeFarest < end);
-            //if (isInStartRange)
-            //{
-
-            //    // NOT CODED troncate the time
-            //    troncatedHistory.AddInLaterBack(end - timeNearest, current.GetState());
-            //}
-            //else if (isInEndRange)
-            //{
-            //    troncatedHistory.AddInLaterBack(current);
-            //}
-            //else 
+          
             if (end >= timeNearest && end < timeFarest)
             {
 
@@ -208,8 +204,6 @@ public class BoolHistory
             }
             i++;
 
-            //if (timeAFound && timeBFound)
-            //    break;
 
         } while (i < m_switchesTracks.Count);
 
@@ -223,192 +217,228 @@ public class BoolHistory
 
 
 
-
-    /*
-    public bool HasChange(ITimeValue nearestFromNow, ITimeValue farestFromNow, out bool current, out int trueCount, out int falseCount)
-        {
-            double start = nearestFromNow.GetAsSeconds(), end = farestFromNow.GetAsSeconds();
-            bool state;
-            double startBed, endBed;
-            double bedTime;
-            for (int i = 0; i < m_switchesTracks.Count; i++)
-            {
-                if (i == 0)
-                {
-                    bedTime = m_switchesTracks[i].GetElpasedTimeAsSecond();
-                    startBed = 0;
-                    endBed = bedTime;
-                }
-
-            }
-
-            current = m_inProgress.GetState();
-            trueCount = 0;
-            falseCount = 0;
-            if (timeInSecondStart >= timeInSecond) { return false; }
-
-            BoolStatePeriode[] history;
-            GetFromNowToPast(out history, false);
-            int index = 0;
-            while (timeInSecondStart < timeInSecond && index < history.Length)
-            {
-                if (history[index].GetState())
-                    trueCount++;
-                else
-                    falseCount++;
-
-                timeInSecondStart += history[index].GetElpasedTimeAsSecond();
-                index++;
-            }
-
-            return trueCount > 0 || falseCount > 0;
-        }
-
-
-        public bool HasChangeRecenlty(float timeInSecond, out bool current, out int trueCount, out int falseCount)
-        {
-            float timeCount = m_inProgress.GetElpasedTimeAsSecond();
-
-            current = m_inProgress.GetState();
-            trueCount = 0;
-            falseCount = 0;
-            if (timeCount >= timeInSecond) { return false; }
-
-            BoolStatePeriode[] history;
-            GetFromNowToPast(out history, false);
-            int index = 0;
-            while (timeCount < timeInSecond && index < history.Length)
-            {
-                if (history[index].GetState())
-                    trueCount++;
-                else
-                    falseCount++;
-
-                timeCount += history[index].GetElpasedTimeAsSecond();
-                index++;
-            }
-
-            return trueCount > 0 || falseCount > 0;
-        }
-
-   */
-
-
-
-
-
-
-
     public bool HasChange(ITimeValue nearestFromNow, ITimeValue farestFromNow, out int trueCount, out int falseCount)
     {
-        RelativeTruncatedBoolHistory history;
-        GetTruncatedHistoryCopy(nearestFromNow, farestFromNow, out history);
-        history.GetSwitchCount(out trueCount, out falseCount);
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(nearestFromNow, farestFromNow, out truncate);
+        truncate.GetSwitchCount(out trueCount, out falseCount);
         return trueCount > 0 || falseCount > 0;
     }
-    public void WasSwitchToRecently(bool observed, out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs)
+
+    public void WasSwitchTo(bool stateObserved, out bool result, ITimeValue from, ITimeValue to)
     {
-        //if (observed && !GetState())
-        //{
-        //    result = false;
-        //    succedToAnwser = true;
-        //}
-        //else if (!observed && GetState())
-        //{
-        //    result = false;
-        //    succedToAnwser = true;
-        //}
-        //else
-        //{
-        //    bool current;
-        //    int t, f;
-        //    HasChangeRecenlty((float)timeObservedInMs.GetAsSeconds(), out current, out t, out f);
-        //    if (observed)
-        //        result = current == true && t > 0;
-        //    else
-        //        result = current == false && f > 0;
+        bool state = GetState();
+        int t=0, f=0;
 
-        //    succedToAnwser = true;
-
-        //}
-        throw new NotImplementedException();
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(from,to, out truncate);
+        truncate.GetSwitchCount(out t, out f);
+        if (stateObserved ==true && state==true && t > 0)
+            result = true;
+        else if (stateObserved == false && state==false && f>0)
+            result = true;
+        else 
+            result = false;
     }
 
-
-
-
-    public void WasSwitchToTrueRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs)
+    public void WasSwitchToTrue(out bool result, ITimeValue from, ITimeValue to)
     {
-        WasSwitchToRecently(true, out result, out succedToAnwser, timeObservedInMs);
+        WasSwitchTo(true,out  result, from, to);
     }
 
-    public void WasSwitchToFalseRecently(out bool result, out bool succedToAnwser, ITimeValue timeObservedInMs)
+    public void WasSwitchToTrue(out bool result, DateTime now, DateTime from, DateTime to)
     {
-        WasSwitchToRecently(false, out result, out succedToAnwser, timeObservedInMs);
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        WasSwitchTo(true, out result, fromV, toV);
     }
 
-    public void WasSwitchToTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to)
+    public void WasSwitchToTrue(out bool result, DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        WasSwitchToTrue(out result, DateTime.Now, from, to);
     }
 
-    public void WasSwitchToFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to)
+    public void WasSwitchToFalse(out bool result, ITimeValue from, ITimeValue to)
     {
-        throw new NotImplementedException();
+        WasSwitchTo(false, out result, from, to);
     }
 
-    public void WasSwitchToTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to)
+    public void WasSwitchToFalse(out bool result, DateTime now, DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        WasSwitchTo(false, out result, fromV, toV);
+    }
+    public void ConvertDateToTime(DateTime now, DateTime from, DateTime to, out ITimeValue fromValue, out ITimeValue toValue) {
+
+        fromValue = new TimeInMsLong((long)((now - from).TotalMilliseconds));
+        toValue = new TimeInMsLong((long)((now - from).TotalMilliseconds));
+
+    }
+    public void WasSwitchToFalse(out bool result, DateTime from, DateTime to)
+    {
+        WasSwitchToFalse(out result, DateTime.Now, from, to);
     }
 
-    public void WasSwitchToFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to)
+    public void WasMaintained(bool stateObserved, out bool result, ITimeValue from, ITimeValue to)
     {
-        throw new NotImplementedException();
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(from, to, out truncate);
+        if (stateObserved)
+            result = truncate.IsMaintaining();
+        else 
+            result = truncate.IsRealeasing();
+        
     }
 
-    public void WasMaintainedTrue(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to)
+    public void WasMaintainedTrue(out bool result, ITimeValue from, ITimeValue to)
     {
-        throw new NotImplementedException();
+        WasMaintained(true, out result, from, to);
     }
 
-    public void WasMaintainedFalse(out bool result, out bool succedToAnwser, ITimeValue from, ITimeValue to)
+    public void WasMaintainedTrue(out bool result, DateTime now, DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        WasMaintained(true, out result, fromV, toV);
     }
 
-    public void WasMaintainedTrue(out bool result, out bool succedToAnwser, DateTime from, DateTime to)
+    public void WasMaintainedTrue(out bool result, DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        WasMaintainedTrue(out result, DateTime.Now, from, to);
     }
 
-    public void WasMaintainedFalse(out bool result, out bool succedToAnwser, DateTime from, DateTime to)
+    public void WasMaintainedFalse(out bool result, ITimeValue from, ITimeValue to)
     {
-        throw new NotImplementedException();
+        WasMaintained(false, out result, from, to);
+    }
+
+    public void WasMaintainedFalse(out bool result, DateTime now, DateTime from, DateTime to)
+    {
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        WasMaintained(false, out result, fromV, toV);
+    }
+
+    public void WasMaintainedFalse(out bool result, DateTime from, DateTime to)
+    {
+        WasMaintainedFalse(out result, DateTime.Now, from, to);
     }
 
     public void GetSwitchCount(out ushort switch2True, out ushort switch2False, ITimeValue from, ITimeValue to)
     {
-        throw new NotImplementedException();
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(from, to, out truncate);
+        bool start, end;
+        truncate.GetSwitchCountAndState(out start, out end, out switch2True, out switch2False);
+    }
+
+    public void GetSwitchCount(out ushort switch2True, out ushort switch2False, DateTime now, DateTime from, DateTime to)
+    {
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        GetSwitchCount(out switch2True, out switch2False, fromV, toV);
     }
 
     public void GetSwitchCount(out ushort switch2True, out ushort switch2False, DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        GetSwitchCount(out switch2True, out switch2False, DateTime.Now, from, to);
     }
 
-    public void GetState(out bool value, out bool succedToAnwser, ITimeValue when)
+    public void GetPoucentOfState(bool stateObserved, out double pourcentState, ITimeValue from, ITimeValue to)
     {
-        throw new NotImplementedException();
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(from, to, out truncate);
+        double tmp;
+        truncate.GetTrueAndFalsePourcent(out pourcentState, out tmp);
     }
 
-    public void GetState(out bool value, out bool succedToAnwser, DateTime when)
+    public void GetPoucentOfState(bool stateObserved, out double pourcentState, DateTime now, DateTime from, DateTime to)
     {
-        throw new NotImplementedException();
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        GetPoucentOfState(stateObserved, out pourcentState, fromV, toV);
     }
 
+    public void GetPoucentOfState(bool stateObserved, out double pourcentState, DateTime from, DateTime to)
+    {
+        GetPoucentOfState(stateObserved, out pourcentState, DateTime.Now, from, to);
+    }
 
+    public void GetBumpsCount(AllBumpType bumb, out uint count, ITimeValue from, ITimeValue to)
+    {
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(from, to, out truncate);
+        truncate.GetBumpsCount( bumb, out count, from, to);
 
+    }
+
+    public void GetBumpsCount(AllBumpType bumb, out uint count, DateTime now, DateTime from, DateTime to)
+    {
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        GetBumpsCount( bumb, out count, fromV, toV);
+    }
+
+    public void GetBumpsCount(AllBumpType bumb, out uint count, DateTime from, DateTime to)
+    {
+        GetBumpsCount( bumb, out count, DateTime.Now, from, to);
+    }
+
+    public void GetTimeCount(bool stateObserved, out ulong timeFound, ITimeValue from, ITimeValue to)
+    {
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(from, to, out truncate);
+        long t, f, o;
+        truncate.GetTrueAndFalseTimecount(out t, out f ,out o) ;
+
+        if (stateObserved)
+            timeFound = (ulong) t;
+        else
+            timeFound = (ulong) f;
+
+    }
+
+    public void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime now, DateTime from, DateTime to)
+    {
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        GetTimeCount(stateObserved , out timeFound, fromV, toV);
+    }
+
+    public void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime from, DateTime to)
+    {
+        GetTimeCount(stateObserved, out timeFound, DateTime.Now, from, to);
+    }
+
+    public void GetState(out bool value, ITimeValue when)
+    {
+        BoolStatePeriode state;
+        GetPeriodeAt(when, out state);
+        value = state.GetState();
+
+    }
+
+    public void GetState(out bool value, DateTime now, DateTime when)
+    {
+        GetState(out value,  new TimeInMsLong((long)((now - when).TotalMilliseconds)) );
+    }
+
+    public void GetState(out bool value, DateTime when)
+    {
+        GetState(out value, DateTime.Now, when);
+    }
+
+    public void GetBooleanableState(out bool value)
+    {
+        value= GetState();
+    }
+
+    public void GetBooleanableState(out bool value, out bool wasBooleanable)
+    {
+        value = GetState();
+        wasBooleanable = true;
+    }
 }
 
 

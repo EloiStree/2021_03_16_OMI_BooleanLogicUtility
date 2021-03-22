@@ -1,6 +1,7 @@
 ﻿using BooleanRegisterUtilityAPI.BooleanLogic;
 using BooleanRegisterUtilityAPI.BoolHistoryLib;
 using BooleanRegisterUtilityAPI.Interface;
+using BooleanRegisterUtilityAPI.Timer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,74 @@ using static BooleanRegisterUtilityAPI.BoolHistoryLib.BooleanRawRegister;
 namespace BooleanRegisterUtilityAPI.Beans
 {
 
-    public class BooleanStateRegister : IBooleanStorage 
+    public class BooleanStateRegister : IBooleanStorage
     {
 
 
         public BooleanRawRegister m_rawSaveAccess = new BooleanRawRegister();
         private Dictionary<string, BooleanNamedHistory> m_storedHistory = new Dictionary<string, BooleanNamedHistory>();
-        private Dictionary<string, BooleanRawRegister.DirectAccess> m_quickAccesToBoolRef = new Dictionary<string, BooleanRawRegister.DirectAccess>();
-       
-        public BooleanNamedHistory[] m_valuesRef;
-        public string[] m_keysRef;
 
+       
+        private Dictionary<string, BooleanRawRegister.DirectAccess> m_quickAccesToBoolRef = new Dictionary<string, BooleanRawRegister.DirectAccess>();
+
+        public BooleanNamedHistory[] m_valuesRef = new BooleanNamedHistory[0];
+        public string[] m_keysRef= new string[0];
+
+        public BooleanStateRegisterTimeTracker m_defaultTimeTracker;
+
+        public BooleanStateRegister()
+        {
+            m_defaultTimeTracker =  new BooleanStateRegisterTimeTracker(this);
+        }
+
+        public BooleanStateRegisterTimeTracker GetDefaultTimer() {
+            return m_defaultTimeTracker;
+        }
+        public void AddTimePastFromDefaultTimer() {
+            m_defaultTimeTracker.AddTimePast();
+        }
+
+        #region DESCRIPTION
+        /// <summary>
+        /// WARNING THIS FUNCTION IS "PERFORMENCE HEAVY"
+        /// </summary>
+        /// <param name="maxLineLenght"></param>
+        /// <returns></returns>
+        public string GetFullHistoryDebugText(int maxLineLenght = 50)
+        {
+            BooleanStateRegister r = this;
+            string result;
+            BooleanTextDebugUtility.GetTextDescriptionOfRegister(
+               ref r,
+               out result, maxLineLenght);
+            return result;
+        }
+       
+        public string GetCurveDebugText(string boolName, int maxLineLenght = 50, float timeInSecond=5)
+        {
+            BooleanNamedHistory target = GetStateOf(boolName);
+            if (target == null)
+                return boolName + ": Not registered";
+
+            string d = BoolHistoryDescription.GetDescriptionNowToPast(target.GetHistory(), timeInSecond);
+            return string.Format("{0}: {1}\n", target.GetName(), d);
+        }
+        public string GetNumericalDebugText(string boolName, int maxLineLenght = 50)
+        {
+            BooleanNamedHistory target = GetStateOf(boolName);
+            if (target == null)
+                return boolName + ": Not registered";
+
+            string d = BoolHistoryDescription.GetNumericDescriptionNowToPast(target.GetHistory());
+            return string.Format("{0}: {1}\n", target.GetName(), StringClamp(d, maxLineLenght));
+        }
+        public static string StringClamp(string text, int count)
+        {
+            if (text.Length < count)
+                return text;
+            return text.Substring(0, count);
+        }
+        #endregion
 
         public void Set(string name, bool value)
         {
@@ -33,6 +91,49 @@ namespace BooleanRegisterUtilityAPI.Beans
             else
             {
                 ChangeExistingValue(name, value);
+            }
+        }
+
+        public void QuickSetAllFalse( params string[] names)
+        {
+            QuickSetAll(false, names);
+        }
+        public void QuickSetAllTrue( params string[] names)
+        {
+            QuickSetAll(true, names);
+        }
+        public void QuickSetAll(bool value, params string [] names)
+        {
+            for (int i = 0; i < names.Length; i++)
+            {
+                Set(names[i], value);
+            }
+        }
+
+        public void SetGroup( string[] names,  bool[] booleanValue)
+        {
+            if (names.Length != booleanValue.Length)
+                throw new Exception("In set group, both array must have the same length");
+            for (int i = 0; i < names.Length; i++)
+            {
+                this.Set(names[i], booleanValue[i]);
+            }
+        }
+        /// <summary>
+        /// up = set up to true, !up = set up to false
+        /// </summary>
+        /// <param name="names"></param>
+        /// <param name="booleanValue"></param>
+        public void QuickSetGroup(params string[] names)
+        {
+            for (int i = 0; i < names.Length; i++)
+            {
+                if ( !string.IsNullOrEmpty(names[i]) && names[i].Length>0) {
+                    if (names[i][0] == '!')
+                        Set(names[i].Substring(1), false);
+                    if (names[i][0] != '!')
+                        Set(names[i].Substring(0), true);
+                }
             }
         }
 
@@ -105,15 +206,29 @@ namespace BooleanRegisterUtilityAPI.Beans
         }
 
         public string[] GetAllKeys() { return m_keysRef.ToArray(); }
-        public BooleanNamedHistory[] GetAllState() { return m_valuesRef.ToArray(); }
-
-        public void AddElapsedTimeToAll(float timePast)
+        public BooleanNamedHistory[] GetAllState() { 
+            return m_valuesRef.ToArray();
+        
+        }
+        public void AddSecondsElapsedTimeToAll(float timePastInSecond)
+        {
+            AddSecondsElapsedTimeToAll((double)timePastInSecond);
+        }
+        public void AddSecondsElapsedTimeToAll(double timePastInSecond)
         {
             foreach (var item in GetAllState())
             {
-                item.GetHistory().AddElapsedTime(timePast);
+                item.GetHistory().AddMilliSecondElapsedTime((long)(timePastInSecond*1000.0));
             }
         }
+        public void AddMilliSecondsElapsedTimeToAll(long totalMilliseconds)
+        {
+            foreach (var item in GetAllState())
+            {
+                item.GetHistory().AddMilliSecondElapsedTime(totalMilliseconds );
+            }
+        }
+
 
         public void GetAllState(out List<BooleanNamedHistory> stateRef)
         {

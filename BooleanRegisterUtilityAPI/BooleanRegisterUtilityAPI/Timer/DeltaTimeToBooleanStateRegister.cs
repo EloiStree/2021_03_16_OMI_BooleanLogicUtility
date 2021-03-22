@@ -51,7 +51,7 @@ namespace BooleanRegisterUtilityAPI.Timer
         {
             foreach (BooleanStateRegister item in m_registers)
             {
-                item.AddElapsedTimeToAll(timepastInSecond);
+                item.AddSecondsElapsedTimeToAll(timepastInSecond);
             }
         }
 

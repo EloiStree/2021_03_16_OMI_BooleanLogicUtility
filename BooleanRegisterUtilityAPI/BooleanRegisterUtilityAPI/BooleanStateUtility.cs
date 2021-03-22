@@ -82,30 +82,32 @@ namespace BooleanRegisterUtilityAPI
                     BooleanNamedHistory isOnState = registre.GetStateOf(booleanChangeTracked[i].GetName());
                     if (booleanChangeTracked[i].IsRequestingActive())
                     {
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
-                            && isOnState.WasSetFalse(time, false))
-                        {
-                            return true;
-                        }
+                        throw new NotImplementedException();
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
+                        //    && isOnState.WasSetFalse(time, false))
+                        //{
+                        //    return true;
+                        //}
 
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
-                           && isOnState.WasSetTrue(time, false))
-                        {
-                            return true;
-                        }
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
+                        //   && isOnState.WasSetTrue(time, false))
+                        //{
+                        //    return true;
+                        //}
                     }
                     else if (booleanChangeTracked[i].IsRequestingInverse())
                     {
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
-                             && !isOnState.WasSetFalse(time, false))
-                        {
-                            return true;
-                        }
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
-                           && !isOnState.WasSetTrue(time, false))
-                        {
-                            return true;
-                        }
+                        throw new NotImplementedException();
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
+                        //     && !isOnState.WasSetFalse(time, false))
+                        //{
+                        //    return true;
+                        //}
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
+                        //   && !isOnState.WasSetTrue(time, false))
+                        //{
+                        //    return true;
+                        //}
                     }
                 }
                 // else throw new Exception("Boolean value is not in the register: " + booleanChangeTracked[i].GetName());
@@ -156,30 +158,32 @@ namespace BooleanRegisterUtilityAPI
                         BooleanNamedHistory isOnState = register.GetStateOf(booleanChangeTracked[i].GetName());
                         if (booleanChangeTracked[i].IsRequestingActive())
                         {
-                            if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
-                                && isOnState.WasSetFalse(time, false))
-                            {
-                                found++;
-                            }
+                            throw new NotImplementedException();
+                            //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
+                            //    && isOnState.WasSetFalse(time, false))
+                            //{
+                            //    found++;
+                            //}
 
-                            if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
-                               && isOnState.WasSetTrue(time, false))
-                            {
-                                found++;
-                            }
+                            //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
+                            //   && isOnState.WasSetTrue(time, false))
+                            //{
+                            //    found++;
+                            //}
                         }
                         else if (booleanChangeTracked[i].IsRequestingInverse())
                         {
-                            if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
-                                 && !isOnState.WasSetFalse(time, false))
-                            {
-                                found++;
-                            }
-                            if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
-                               && !isOnState.WasSetTrue(time, false))
-                            {
-                                found++;
-                            }
+                            throw new NotImplementedException();
+                            //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
+                            //     && !isOnState.WasSetFalse(time, false))
+                            //{
+                            //    found++;
+                            //}
+                            //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
+                            //   && !isOnState.WasSetTrue(time, false))
+                            //{
+                            //    found++;
+                            //}
                         }
                         if (found > 1) return false;
                     }
@@ -217,30 +221,32 @@ namespace BooleanRegisterUtilityAPI
                     BooleanNamedHistory isOnState = registre.GetStateOf(booleanChangeTracked[i].GetName());
                     if (booleanChangeTracked[i].IsRequestingActive())
                     {
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
-                            && !isOnState.WasSetFalse(time, false))
-                        {
-                            return false;
-                        }
+                        throw new NotImplementedException();
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
+                        //    && !isOnState.WasSetFalse(time, false))
+                        //{
+                        //    return false;
+                        //}
 
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
-                           && !isOnState.WasSetTrue(time, false))
-                        {
-                            return false;
-                        }
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
+                        //   && !isOnState.WasSetTrue(time, false))
+                        //{
+                        //    return false;
+                        //}
                     }
                     else if (booleanChangeTracked[i].IsRequestingInverse())
                     {
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
-                             && isOnState.WasSetFalse(time, false))
-                        {
-                            return false;
-                        }
-                        if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
-                           && isOnState.WasSetTrue(time, false))
-                        {
-                            return false;
-                        }
+                        throw new NotImplementedException();
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetTrue
+                        //     && isOnState.WasSetFalse(time, false))
+                        //{
+                        //    return false;
+                        //}
+                        //if (booleanChangeTracked[i].GetChangeType() == BooleanChangeType.SetFalse
+                        //   && isOnState.WasSetTrue(time, false))
+                        //{
+                        //    return false;
+                        //}
                     }
                 }
                 // else throw new Exception("Boolean value is not in the register: " + booleanChangeTracked[i].GetName());
@@ -312,11 +318,13 @@ namespace BooleanRegisterUtilityAPI
             TimedBooleanChange[] changes;
             DateTime to = DateTime.Now;
             DateTime from = to.AddSeconds(-booleanValueChange.GetSecondToCheck());
-            h.GetFromNowToPast(out changes, DateTime.Now);
-            TimedBooleanChange[] valideChanges =
-                changes.Where(k => k.GetChange() == booleanValueChange.GetChangeType()
-                && (k.GetTime() > from && k.GetTime() <= to)).ToArray();
-            return valideChanges.Length > 0;
+
+            throw new NotImplementedException();
+            //h.GetFromNowToPast(out changes, DateTime.Now);
+            //TimedBooleanChange[] valideChanges =
+            //    changes.Where(k => k.GetChange() == booleanValueChange.GetChangeType()
+            //    && (k.GetTime() > from && k.GetTime() <= to)).ToArray();
+            //return valideChanges.Length > 0;
         }
 
         public static BooleanIndexGroup RemoveDuplicate(BooleanIndexGroup range)
@@ -363,12 +371,14 @@ namespace BooleanRegisterUtilityAPI
 
                     BoolHistory select = reg.GetStateOf(item).GetHistory();
                     //if (select.HasHistory()) { 
-                    select.GetFromNowToPast(out boolChanged, now);
-                    boolChanged = boolChanged.Where(k => (k.GetTime() >= from) && (k.GetTime() <= to)).ToArray();
-                    for (int i = 0; i < boolChanged.Length; i++)
-                    {
-                        result.Add(new NamedBooleanChangeTimed(item, boolChanged[i]));
-                    }
+
+                    throw new NotImplementedException();
+                    //select.GetFromNowToPast(out boolChanged, now);
+                    //boolChanged = boolChanged.Where(k => (k.GetTime() >= from) && (k.GetTime() <= to)).ToArray();
+                    //for (int i = 0; i < boolChanged.Length; i++)
+                    //{
+                    //    result.Add(new NamedBooleanChangeTimed(item, boolChanged[i]));
+                    //}
                     //}
                 }
             }
