@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.Beans
 {
@@ -195,6 +195,21 @@ namespace BooleanRegisterUtilityAPI.Beans
         public void GetBooleanableState(out bool value, out bool wasBooleanable)
         {
             m_boolState.GetBooleanableState(out value, out wasBooleanable);
+        }
+
+        public void StartAndFinishState(bool stateStart, bool statEnd, out bool result, ITimeValue from, ITimeValue to)
+        {
+            m_boolState.StartAndFinishState( stateStart, statEnd, out result, from, to);
+        }
+
+        public void StartAndFinishState(bool stateStart, bool statEnd, out bool result, DateTime now, DateTime from, DateTime to)
+        {
+            m_boolState.StartAndFinishState(stateStart, statEnd, out result,now, from, to);
+        }
+
+        public void StartAndFinishState(bool stateStart, bool statEnd, out bool result, DateTime from, DateTime to)
+        {
+            m_boolState.StartAndFinishState(stateStart, statEnd, out result, from, to);
         }
     }
 }

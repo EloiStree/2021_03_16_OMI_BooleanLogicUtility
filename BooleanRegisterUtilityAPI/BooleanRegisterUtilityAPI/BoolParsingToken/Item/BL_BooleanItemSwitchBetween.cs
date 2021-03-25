@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
 {
@@ -26,7 +26,16 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
         }
         public override string ToString()
         {
-            return string.Format(" [BOS_{0}_{1}] ", GetTargetName(), GetObservedTime().ToString());
+            char type=' ';
+            if (m_switchType == SwitchTrackedType.SwitchRecently && m_switchObserved == BooleanSwitchType.SetAsTrue)
+                type = '↓';
+            if (m_switchType == SwitchTrackedType.SwitchRecently && m_switchObserved == BooleanSwitchType.SetAsFalse)
+                type = '↑';
+            if (m_switchType == SwitchTrackedType.SwitchAndStayActive && m_switchObserved == BooleanSwitchType.SetAsTrue)
+                type = '⤓';
+            if (m_switchType == SwitchTrackedType.SwitchAndStayActive && m_switchObserved == BooleanSwitchType.SetAsFalse)
+                type = '⤒';
+            return string.Format(" [B{1},{0}:{2}] ", GetTargetName(), type, GetObservedTime().ToString());
         }
     }
 

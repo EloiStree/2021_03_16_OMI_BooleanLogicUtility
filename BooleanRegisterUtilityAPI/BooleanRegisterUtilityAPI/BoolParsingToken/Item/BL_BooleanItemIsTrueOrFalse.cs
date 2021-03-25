@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
 {
@@ -27,7 +27,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
 
         public override string ToString()
         {
-            return string.Format(" [Btf{0}_{1}] ", m_value == BoolState.True, GetTargetName());
+            return string.Format(" [B{0},{1}] ", m_value == BoolState.True? "_" : "‾", GetTargetName());
         }
     }
 }

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
 {
@@ -25,7 +25,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
 
         public override string ToString()
         {
-            return string.Format(" [BM{2}_{0}_{1}] ", GetTargetName(), GetObservedTime().ToString(), m_switchObserved);
+            return string.Format(" [BM{2},{0}:{1}] ", GetTargetName(), GetObservedTime().ToString(), m_switchObserved==BoolState.True? "_" : "‾");
         }
 
         

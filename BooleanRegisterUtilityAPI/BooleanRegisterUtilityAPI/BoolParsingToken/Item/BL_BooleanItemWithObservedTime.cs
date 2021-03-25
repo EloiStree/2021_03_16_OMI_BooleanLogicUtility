@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
 {
@@ -25,7 +25,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
         }
         public override string ToString()
         {
-            return string.Format(" [BOT_{0}_{1}] ", GetTargetName(), m_timeObserved.ToString() );
+            return string.Format(" [B{0}:{1}] ", GetTargetName(), m_timeObserved.ToString() );
         }
     }
 }

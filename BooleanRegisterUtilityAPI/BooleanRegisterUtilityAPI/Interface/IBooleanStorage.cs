@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.Interface
 {
@@ -75,10 +75,14 @@ namespace BooleanRegisterUtilityAPI.Interface
         void WasSwitchToTrue(out bool result,  DateTime now, DateTime from, DateTime to);
         void WasSwitchToTrue(out bool result,  DateTime from, DateTime to);
 
-        void WasSwitchToFalse(out bool result,  ITimeValue from, ITimeValue to);
-        void WasSwitchToFalse(out bool result,  DateTime now, DateTime from, DateTime to);
-        void WasSwitchToFalse(out bool result,  DateTime from, DateTime to);
+        void WasSwitchToFalse(out bool result, ITimeValue from, ITimeValue to);
+        void WasSwitchToFalse(out bool result, DateTime now, DateTime from, DateTime to);
+        void WasSwitchToFalse(out bool result, DateTime from, DateTime to);
 
+
+        void StartAndFinishState(bool stateStart, bool statEnd,out bool result, ITimeValue from, ITimeValue to);
+        void StartAndFinishState(bool stateStart, bool statEnd, out bool result, DateTime now, DateTime from, DateTime to);
+        void StartAndFinishState(bool stateStart, bool statEnd, out bool result, DateTime from, DateTime to);
 
 
         void WasMaintained(bool stateObserved, out bool result,  ITimeValue from, ITimeValue to);
@@ -201,6 +205,13 @@ namespace BooleanRegisterUtilityAPI.Interface
     {
 
        void GetTime(DateTime now, out DateTime observed);
+    }
+
+
+    public interface ILogicBlock
+    {
+        void Get(out bool value, out bool computed);
+
     }
 
 

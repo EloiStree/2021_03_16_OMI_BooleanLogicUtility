@@ -10,99 +10,92 @@ namespace BooleanRegisterUtilityAPI
     public class TextToBoolStateMachineParser
     {
 
+        //public static bool GetConditionOf(string line, out AbstractConditionBoolState conditionState)
+        //{
+        //    string conditionName = "";
+        //    float time;
+        //    List<BooleanValueChangeRef> lc;
+        //    List<BooleanValueRef> lv;
+        //    conditionState = null;
+        //    if (!IsConditionStateParse(line, out conditionName, out time, out lv, out lc))
+        //        return false;
+
+        //    if (conditionName.ToLower().IndexOf("and") == 0)
+        //        conditionState = new AndBoolState(lv, lc, time);
+        //    else if (conditionName.ToLower().IndexOf("or") == 0)
+        //        conditionState = new OrBoolState(lv, lc, time);
+        //    else if (conditionName.ToLower().IndexOf("xor") == 0)
+        //        conditionState = new XorBoolState(lv, lc, time);
+        //    return conditionState != null;
+        //}
 
 
 
+        //public static string FindAndSubstring(string line, char charToSeek, out bool didfound, out string textFound)
+        //{
+        //    didfound = false; textFound = "";
+
+        //    int index = line.IndexOf(charToSeek);
+        //    if (index < 0) return line;
+        //    didfound = true;
+        //    textFound = line.Substring(0, index);
+        //    return line.Substring(index + 1);
+        //}
 
 
+        //public static bool IsConditionStateParse(string line, out string conditionName, out float timeAsSecond, out List<BooleanValueRef> valueState, out List<BooleanValueChangeRef> valueChange)
+        //{
+        //    conditionName = "";
+        //    timeAsSecond = 0.3f;
+        //    valueChange = new List<BooleanValueChangeRef>();
+        //    valueState = new List<BooleanValueRef>();
 
 
-        public static bool GetConditionOf(string line, out AbstractConditionBoolState conditionState)
-        {
-            string conditionName = "";
-            float time;
-            List<BooleanValueChangeRef> lc;
-            List<BooleanValueRef> lv;
-            conditionState = null;
-            if (!IsConditionStateParse(line, out conditionName, out time, out lv, out lc))
-                return false;
-
-            if (conditionName.ToLower().IndexOf("and") == 0)
-                conditionState = new AndBoolState(lv, lc, time);
-            else if (conditionName.ToLower().IndexOf("or") == 0)
-                conditionState = new OrBoolState(lv, lc, time);
-            else if (conditionName.ToLower().IndexOf("xor") == 0)
-                conditionState = new XorBoolState(lv, lc, time);
-            return conditionState != null;
-        }
+        //    int index = line.IndexOf('|');
+        //    if (index < 0) return false;
+        //    conditionName = line.Substring(0, index);
+        //    line = line.Substring(index + 1);
+        //    //Debug.Log("Word:"+conditionName +">>"+line + ":");
 
 
+        //    index = line.IndexOf('|');
+        //    if (index > 0)
+        //    {
+        //        float miliSecondValue;
+        //        string milisecondAsText = line.Substring(0, index);
+        //        if (float.TryParse(milisecondAsText, out miliSecondValue))
+        //        {
+        //            timeAsSecond = miliSecondValue / 1000;
+        //        }
+        //        else timeAsSecond = 0.3f;
+        //        line = line.Substring(index + 1);
+        //        //Debug.Log("Time:" + milisecondAsText + ">>" + line+":");
+        //    }
 
-        public static string FindAndSubstring(string line, char charToSeek, out bool didfound, out string textFound)
-        {
-            didfound = false; textFound = "";
-
-            int index = line.IndexOf(charToSeek);
-            if (index < 0) return line;
-            didfound = true;
-            textFound = line.Substring(0, index);
-            return line.Substring(index + 1);
-        }
-
-
-        public static bool IsConditionStateParse(string line, out string conditionName, out float timeAsSecond, out List<BooleanValueRef> valueState, out List<BooleanValueChangeRef> valueChange)
-        {
-            conditionName = "";
-            timeAsSecond = 0.3f;
-            valueChange = new List<BooleanValueChangeRef>();
-            valueState = new List<BooleanValueRef>();
-
-
-            int index = line.IndexOf('|');
-            if (index < 0) return false;
-            conditionName = line.Substring(0, index);
-            line = line.Substring(index + 1);
-            //Debug.Log("Word:"+conditionName +">>"+line + ":");
+        //    //Debug.Log("Line#" + line + "#");
+        //    BooleanValueChangeRef.CreateFrom(line.Split(' '), out valueChange);
+        //    //Debug.Log("Change:" + string.Join(" ", valueChange));
+        //    BooleanValueRef.CreateFrom(line.Split(' '), out valueState);
+        //    //Debug.Log("Value:" + string.Join(" ", valueState));
+        //    return true;
+        //}
 
 
-            index = line.IndexOf('|');
-            if (index > 0)
-            {
-                float miliSecondValue;
-                string milisecondAsText = line.Substring(0, index);
-                if (float.TryParse(milisecondAsText, out miliSecondValue))
-                {
-                    timeAsSecond = miliSecondValue / 1000;
-                }
-                else timeAsSecond = 0.3f;
-                line = line.Substring(index + 1);
-                //Debug.Log("Time:" + milisecondAsText + ">>" + line+":");
-            }
-
-            //Debug.Log("Line#" + line + "#");
-            BooleanValueChangeRef.CreateFrom(line.Split(' '), out valueChange);
-            //Debug.Log("Change:" + string.Join(" ", valueChange));
-            BooleanValueRef.CreateFrom(line.Split(' '), out valueState);
-            //Debug.Log("Value:" + string.Join(" ", valueState));
-            return true;
-        }
-
-
-        public static bool IsClassicParse(string line, out ClassicBoolState classicState)
-        {
-            classicState = null;
-            bool foundClassicToPrase = Regex.Matches(line, "[^!+a-zA-Z0-9\\s↑↓]").Count <= 0;
-            if (!foundClassicToPrase)
-                return false;
-            //Debug.Log("Parse:" + line);
-            line = line.Replace("+", " ");
-            List<BooleanValueChangeRef> valueChange;
-            List<BooleanValueRef> valueState;
-            BooleanValueChangeRef.CreateFrom(line.Split(' '), out valueChange);
-            BooleanValueRef.CreateFrom(line.Split(' '), out valueState);
-            classicState = new ClassicBoolState(valueState, valueChange, 0.5f);
-            return true;
-        }
+        //public static bool IsClassicParse(string line, out ClassicBoolState classicState)
+        //{
+        //    classicState = null;
+        //    bool foundClassicToPrase = Regex.Matches(line, "[^!+a-zA-Z0-9\\s↑↓]").Count <= 0;
+        //    if (!foundClassicToPrase)
+        //        return false;
+        //    //Debug.Log("Parse:" + line);
+        //    line = line.Replace("+", " ");
+        //    List<BooleanValueChangeRef> valueChange;
+        //    List<BooleanValueRef> valueState;
+        //    BooleanValueChangeRef.CreateFrom(line.Split(' '), out valueChange);
+        //    BooleanValueRef.CreateFrom(line.Split(' '), out valueState);
+        //    classicState = new ClassicBoolState(valueState, valueChange, 0.5f);
+        //    return true;
+        //}
 
         /*
         public static bool IsGroupParse(string line, out string name, out BooleanGroup group) {

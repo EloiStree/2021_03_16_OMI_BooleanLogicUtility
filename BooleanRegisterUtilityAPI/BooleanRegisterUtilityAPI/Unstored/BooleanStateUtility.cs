@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace BooleanRegisterUtilityAPI
 {
@@ -428,7 +427,7 @@ namespace BooleanRegisterUtilityAPI
         {
             public static string Join(string joinText, IEnumerable<NamedBooleanChangeTimed> changes)
             {
-                return string.Join(joinText, changes.Select(k => GetDescriptionOf(k)));
+                return string.Join(joinText, changes.Select(k => GetDescriptionOf(k)).ToArray());
             }
             private static string GetDescriptionOf(NamedBooleanChangeTimed k)
             {
@@ -436,7 +435,7 @@ namespace BooleanRegisterUtilityAPI
             }
             public static string Join(string textJoin, BoolStatePeriode[] change)
             {
-                return string.Join(textJoin, change.Select(k => k.GetState() ? '↓' : '↑'));
+                return string.Join(textJoin, change.Select(k => k.GetState() ? "↓" : "↑").ToArray());
             }
         }
         // https://en.wikipedia.org/wiki/Bitwise_operation#XOR
@@ -461,7 +460,7 @@ namespace BooleanRegisterUtilityAPI
 
                 change = BooleanStateUtility.GetBoolChangedBetweenTimeRangeFromNow(
                     register, group, changeIntervalTracked, sort);
-                txt = string.Join(" ", BooleanStateUtility.Description.Join("", change));
+                txt =BooleanStateUtility.Description.Join("", change);
             }
             return txt;
 

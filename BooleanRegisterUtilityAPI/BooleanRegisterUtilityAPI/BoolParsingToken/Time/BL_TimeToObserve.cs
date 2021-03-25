@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item.Time
 {
@@ -68,7 +68,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item.Time
 
         public override string ToString()
         {
-            return string.Format(" [TO{0},{1}] ", IsRelativeToNow(), ""+m_key+" "+m_range);
+            return string.Format(" [t{0},{1}] ", IsRelativeToNow()?"r":"a", ""+m_key+""+m_range);
         }
 
         public ObservedTimeType GetObservedType()

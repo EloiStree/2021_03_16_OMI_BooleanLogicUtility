@@ -439,6 +439,27 @@ public class BoolHistory : IBooleanHistory
         value = GetState();
         wasBooleanable = true;
     }
+
+    public void StartAndFinishState(bool stateStart, bool statEnd, out bool result, ITimeValue from, ITimeValue to)
+    {
+        RelativeTruncatedBoolHistory truncate;
+        GetTruncatedHistoryCopy(from, to, out truncate);
+        result = truncate.GetStartState() == stateStart && truncate.GetEndState() == statEnd;
+    }
+
+    public void StartAndFinishState(bool stateStart, bool statEnd, out bool result, DateTime now, DateTime from, DateTime to)
+    {
+        ITimeValue fromV, toV;
+        ConvertDateToTime(now, from, to, out fromV, out toV);
+        StartAndFinishState( stateStart,  statEnd, out result, fromV, toV);
+    }
+
+    public void StartAndFinishState(bool stateStart, bool statEnd, out bool result, DateTime from, DateTime to)
+    {
+        StartAndFinishState( stateStart,  statEnd, out result, DateTime.Now, from, to);
+    }
+
+    
 }
 
 

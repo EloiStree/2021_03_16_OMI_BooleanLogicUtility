@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken.Unstore
 {
@@ -23,7 +23,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Unstore
         }
         public override string ToString()
         {
-            return string.Format(" [Tak{0}] ", m_timeOfDay);
+            return string.Format(" [At {0}] ", m_timeOfDay);
         }
     }
 }

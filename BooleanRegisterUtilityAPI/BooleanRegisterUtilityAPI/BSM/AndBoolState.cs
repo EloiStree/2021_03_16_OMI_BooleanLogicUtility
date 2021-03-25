@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace BooleanRegisterUtilityAPI.BSM
 {
@@ -29,7 +28,7 @@ namespace BooleanRegisterUtilityAPI.BSM
 
         public  string ToString()
         {
-            return "(BSM, AND:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption())) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption())) + ")";
+            return "(BSM, AND:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption()).ToArray()) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption()).ToArray()) + ")";
         }
     }
 
@@ -52,7 +51,7 @@ namespace BooleanRegisterUtilityAPI.BSM
 
         public  string ToString()
         {
-            return "(BSM, OR:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption())) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption())) + ")";
+            return "(BSM, OR:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption()).ToArray()) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption()).ToArray()) + ")";
         }
     }
 
@@ -71,7 +70,7 @@ namespace BooleanRegisterUtilityAPI.BSM
 
         public  string ToString()
         {
-            return "(BSM, XOR:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption())) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption())) + ")";
+            return "(BSM, XOR:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption()).ToArray()) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption()).ToArray()) + ")";
         }
     }
 
@@ -91,7 +90,7 @@ namespace BooleanRegisterUtilityAPI.BSM
 
         public  string ToString()
         {
-            return "(BSM, CLASSIC:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption())) + "  " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption())) + ")";
+            return "(BSM, CLASSIC:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption()).ToArray()) + "  " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption()).ToArray()) + ")";
         }
     }
 
@@ -121,7 +120,7 @@ namespace BooleanRegisterUtilityAPI.BSM
 
         public  string ToString()
         {
-            return "(BSM, CONDITION:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption())) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption())) + ")";
+            return "(BSM, CONDITION:" + string.Join(" ", m_observedState.Select(k => k.GetNameWithDesciption()).ToArray()) + " - " + string.Join(" ", m_observedChange.Select(k => k.GetNameWithDesciption()).ToArray()) + ")";
         }
     }
 }

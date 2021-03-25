@@ -16,7 +16,7 @@ namespace BooleanRegisterUtilityAPI
 
         public override string ToString()
         {
-            return string.Format(" [⊗ {0} ] ", string.Join(" " , m_values.Select(k=>k.ToString())));
+            return string.Format(" [⊗ {0} ] ", string.Join(" " , m_values.Select(k=>k.ToString()).ToArray()));
         }
     }
 }

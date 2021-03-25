@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
 {
@@ -21,7 +21,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
         }
         public override string ToString()
         {
-            return string.Format(" [B?{0}_{1}] ", m_existanceCheck, GetTargetName());
+            return string.Format(" [B{0},{1}] ", m_existanceCheck== BoolExistanceState.Exist ?"?":"⁉", GetTargetName());
         }
     }
 }
