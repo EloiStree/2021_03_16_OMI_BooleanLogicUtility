@@ -32,34 +32,49 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
             { return; }
 
             IBoolObservedTime time = m_value.GetObservedTime();
-            if (time.GetTimeKey() != null)
+
+
+            double pourcent = 0;
+            if (time == null || ! time.IsDefined())
             {
-                throw new Exception("The code is design to work in range not in key");
+                history.GetPoucentOfState(
+                   m_value.m_observedState == BoolState.True ? true : false,
+                   out pourcent);
 
             }
-            else if (time.GetTimeRange() != null)
-            {
+            else {
 
-                DateTime near, far;
-                time.GetTimeRange().GetTime(when, out near, out far);
+                DateTime near=when, far=when;
+                if (time.GetTimeKey() != null)
+                {
+                    near = when;
+                    time.GetTimeKey().GetTime(when, out far);
 
-                double pourcent = 0;
-                history.GetPoucentOfState( 
-                    m_value.m_observedState == BoolState.True?true:false,
-                    out pourcent,when, near, far);
-                if (m_value.m_observedSide == ValueDualSide.Less && pourcent < m_value.m_pourcentIn1to100)
-                {
-                    value = true;
-                }else if (m_value.m_observedSide == ValueDualSide.More && pourcent > m_value.m_pourcentIn1to100)
-                {
-                    value = true;
                 }
-                else value = false;
+                else if (time.GetTimeRange() != null)
+                {
 
-                computed = true;
-                return;
-
+                    time.GetTimeRange().GetTime(when, out near, out far);
+                }
+                history.GetPoucentOfState(
+                        m_value.m_observedState == BoolState.True ? true : false,
+                        out pourcent, when, near, far);
+             }
+            if (m_value.m_observedSide == ValueDualSide.Less && pourcent <= m_value.m_pourcent.GetPourcentAs0To1())
+            {
+                value = true;
             }
+            else if (m_value.m_observedSide == ValueDualSide.More && pourcent >= m_value.m_pourcent.GetPourcentAs0To1())
+            {
+                value = true;
+            }
+            else value = false;
+
+            computed = true;
+            return;
+
+
+
         }
 
         public override void Get(out bool value, out bool computed)
@@ -70,6 +85,11 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
         public override bool IsTimeNotUsefulForComputing()
         {
             return true;
+        }
+
+        public override string ToString()
+        {
+            return m_value.ToString();
         }
     }
 }

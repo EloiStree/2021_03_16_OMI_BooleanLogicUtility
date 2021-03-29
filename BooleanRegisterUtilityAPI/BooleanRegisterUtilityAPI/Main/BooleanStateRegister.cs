@@ -218,10 +218,10 @@ namespace BooleanRegisterUtilityAPI.Beans
         {
             foreach (var item in GetAllState())
             {
-                item.GetHistory().AddMilliSecondElapsedTime((long)(timePastInSecond*1000.0));
+                item.GetHistory().AddMilliSecondElapsedTime((uint)(timePastInSecond*1000.0));
             }
         }
-        public void AddMilliSecondsElapsedTimeToAll(long totalMilliseconds)
+        public void AddMilliSecondsElapsedTimeToAll(uint totalMilliseconds)
         {
             foreach (var item in GetAllState())
             {

@@ -13,7 +13,7 @@ public class BoolHistoryTDDMono : MonoBehaviour
     public double m_currentTime;
     public bool m_currentState;
 
-    public long m_timeAt=2000;
+    public uint m_timeAt =2000;
     public bool m_timeAtState;
 
     public KeyCode m_key= KeyCode.Space;
@@ -24,16 +24,16 @@ public class BoolHistoryTDDMono : MonoBehaviour
     public string m_debugStringPastToNow;
     public Text m_debugDisplayPastToNow;
 
-    public long m_timeA=3000;
-    public long m_timeB=5000;
+    public uint m_timeA =3000;
+    public uint m_timeB =5000;
     public string m_debugStringAB;
     public Text m_debugDisplayAB;
     public bool m_isMaintaining;
     public bool m_isRealeasing;
 
-    public long m_overwatch;
-    public long m_overwatchTrue;
-    public long m_overwatchFalse;
+    public uint m_overwatch;
+    public uint m_overwatchTrue;
+    public uint m_overwatchFalse;
 
     public bool m_wasSwitchAndStillTrue;
     public bool m_wasSwitchAndStillFalse;
@@ -56,7 +56,7 @@ public class BoolHistoryTDDMono : MonoBehaviour
     {
 
         m_history.SetMaxSaveTo(m_maxMermory);
-        m_history.AddMilliSecondElapsedTime((long)(Time.deltaTime*1000.0));
+        m_history.AddMilliSecondElapsedTime((uint)(Time.deltaTime*1000.0));
         m_history.SetState(Input.GetKey(KeyCode.Space));
 
         m_timeObserved = m_history.GetTimeOverwatch();
@@ -64,7 +64,7 @@ public class BoolHistoryTDDMono : MonoBehaviour
         m_currentState = m_history.GetInProgressState().GetState();
 
         BoolStatePeriode p;
-        m_history.GetPeriodeAt(new TimeInMsLong(m_timeAt), out p) ;
+        m_history.GetPeriodeAt(new TimeInMsUnsignedInteger(m_timeAt), out p) ;
         m_timeAtState = p.GetState();
         m_debugStringNowToPast = BoolHistoryDescription.GetDescriptionNowToPast(m_history, m_timeAt / 1000f);
         if (m_debugDisplayNowToPast != null)
@@ -77,7 +77,7 @@ public class BoolHistoryTDDMono : MonoBehaviour
             m_debugDisplayPastToNow.text = m_debugStringPastToNow;
 
         BoolStatePeriode[] ap;
-        m_history.GetTruncatedHistoryCopy(new TimeInMsLong(m_timeA), new TimeInMsLong(m_timeB), out history ) ;
+        m_history.GetTruncatedHistoryCopy(new TimeInMsUnsignedInteger(m_timeA), new TimeInMsUnsignedInteger(m_timeB), out history ) ;
         history.GetArray(out ap);
         m_debugStringAB = BoolHistoryDescription.GetDescriptionNowToPast(history, m_timeAt / 1000f);
         if (m_debugDisplayAB != null)

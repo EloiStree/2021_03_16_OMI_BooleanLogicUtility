@@ -9,13 +9,13 @@ namespace BooleanRegisterUtilityAPI.BooleanLogic.Time
 {
     public class ZeroTime : ITimeValue
     {
-        public static ZeroTime Default;
+        public static ZeroTime Default= new ZeroTime();
         public double GetAsHours()
         {
             return 0;
         }
 
-        public void GetAsMilliSeconds(out long valueInMs)
+        public void GetAsMilliSeconds(out uint valueInMs)
         {
             valueInMs = 0;
         }

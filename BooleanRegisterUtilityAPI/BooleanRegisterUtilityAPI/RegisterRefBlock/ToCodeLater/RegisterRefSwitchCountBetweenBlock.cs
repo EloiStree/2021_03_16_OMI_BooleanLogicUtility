@@ -5,11 +5,12 @@ using System;
 
 namespace BooleanRegisterUtilityAPI
 {
-    public class RegisterRefSwitchBetweenBlock : AbstractRegisterRefBlock
+    public class RegisterRefSwitchCountBetweenBlock : AbstractRegisterRefBlock
     {
+        /*
         private BL_BooleanItemSwitchBetween m_booleanItemSwitchBetween;
 
-        public RegisterRefSwitchBetweenBlock(RefBooleanRegister defaultregister, BL_BooleanItemSwitchBetween booleanItemSwitchBetween): base(defaultregister)
+        public RegisterRefSwitchCountBetweenBlock(RefBooleanRegister defaultregister, BL_BooleanItemSwitchBetween booleanItemSwitchBetween): base(defaultregister)
         {
             this.m_booleanItemSwitchBetween = booleanItemSwitchBetween;
         }
@@ -93,6 +94,25 @@ namespace BooleanRegisterUtilityAPI
         public override string ToString()
         {
             return m_booleanItemSwitchBetween.ToString();
+        }
+        */
+        public RegisterRefSwitchCountBetweenBlock(RefBooleanRegister defaultregister) : base(defaultregister)
+        {
+        }
+
+        public override void Get(out bool value, out bool computed, DateTime when)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Get(out bool value, out bool computed)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsTimeNotUsefulForComputing()
+        {
+            throw new NotImplementedException();
         }
     }
 }

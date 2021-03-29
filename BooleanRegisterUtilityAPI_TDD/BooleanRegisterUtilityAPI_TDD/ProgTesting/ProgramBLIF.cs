@@ -102,8 +102,8 @@ namespace BooleanRegisterUtilityAPI_TDD
 
             LogicBlockBuilder builder = new LogicBlockBuilder();
 
-            ITimeValue tf = new TimeInMsLong(5000);
-            ITimeValue tn = new TimeInMsLong(0);
+            ITimeValue tf = new TimeInMsUnsignedInteger(5000);
+            ITimeValue tn = new TimeInMsUnsignedInteger(0);
 
             IBoolObservedTime key = new BL_TimeToObserve(true, new BL_RelativeTimeFromNow(tf));
             IBoolObservedTime range = new BL_TimeToObserve(true, new BL_RelativeTimeDurationFromNow(tn, tf));

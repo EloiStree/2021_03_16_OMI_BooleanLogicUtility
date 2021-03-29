@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using BooleanRegisterUtilityAPI.Enum;
+using BooleanRegisterUtilityAPI.Beans;
+using BooleanRegisterUtilityAPI.RegisterRefBlock;
 
 namespace BooleanRegisterUtilityAPI.BoolParsingToken
 {
@@ -69,13 +71,26 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             return b;
         
         }
-            public  static  void TryToParse(string textOfItem, out bool found, out BL_BooleanItem bItem)
+        public static void TryToParse(string textOfItem, out bool found, out BL_BooleanItem bItem)
         {
+            if (string.IsNullOrEmpty(textOfItem))
+            { found = false; bItem = null; return; }
+
+
             found = false;
             bItem = null;
             textOfItem = textOfItem.Trim();
             string boolName;
             ExtractBooleanName(textOfItem, out boolName);
+
+            if (string.IsNullOrEmpty(boolName))
+            { found = false; bItem = null; return; }
+            if (boolName.Length == textOfItem.Length) {
+                found = true;
+                bItem = new BL_BooleanItemDefault(boolName);
+                return;
+            }
+
             string boolmeta = textOfItem.Substring(boolName.Length).Trim();
 
             if (boolName.Trim().Length == 0)
@@ -112,6 +127,18 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 bItem = CreatePourcentObserved(boolName, boolmeta);
 
             }
+            else if (StartWith("‾_", ref boolmeta) || StartWith("_‾", ref boolmeta) || StartWith("‾‾", ref boolmeta) || StartWith("__", ref boolmeta))
+            {
+                bItem = CreateStartFinishInRange(boolName, boolmeta);
+
+
+            }
+            else if (StartWith("_", ref boolmeta))
+            {
+
+                bItem = CreateMaintainLogic(boolName, boolmeta);
+            }
+
             else if (StartWith("‾", ref boolmeta) )
             {
                 bItem = CreateMaintainLogic(boolName, boolmeta);
@@ -143,39 +170,84 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 bItem = CreateSwitchAndStay(boolName, boolmeta);
 
             }
+            
+            
             else if (StartWith("⊓", ref boolmeta))
             {
 
                 bItem = CreateBumpCount(boolName, boolmeta);
+                if (bItem == null)
+                    bItem = CreateBumpMorse(boolName, boolmeta);
             }
             else if (StartWith("⊔", ref boolmeta))
             {
 
                 bItem = CreateBumpCount(boolName, boolmeta);
+                if (bItem == null)
+                    bItem = CreateBumpMorse(boolName, boolmeta);
             }
             else if (StartWith("⏱", ref boolmeta))
             {
 
                 bItem = CreateTimeCount(boolName, boolmeta);
             }
-            
-            else if (StartWith("!?", ref boolmeta))
+
+            else if (StartWith("!?", ref boolmeta) && boolmeta.Length == 2)
             {
                 bItem = CreateExistLogic(boolName, false);
 
             }
-         
-            else if (StartWith("?", ref boolmeta))
+
+            else if (StartWith("?", ref boolmeta) && boolmeta.Length == 1)
             {
                 bItem = CreateExistLogic(boolName, true);
-
+            }
+            else if (StartWith("!?", ref boolmeta) )
+            {
+                bItem = CreateExistLogic(boolName, boolmeta);
 
             }
-           
+
+            else if (StartWith("?", ref boolmeta) )
+            {
+                bItem = CreateExistLogic(boolName, boolmeta);
+            }
+
 
         }
 
+       
 
+        private static BL_BooleanItem CreateStartFinishInRange(string boolName, string boolmeta)
+        {
+            if (boolmeta.Length  <2) {
+                return null;
+            }
+            if ((boolmeta[0] == '_' || boolmeta[0] == '‾') && (boolmeta[1] == '_' || boolmeta[1] == '‾'))
+
+            {
+                BoolState stateStart = boolmeta[0] == '_' ? BoolState.True : BoolState.True;
+                BoolState stateEnd = boolmeta[1] == '_' ? BoolState.True : BoolState.True;
+
+                string[] tokens = boolmeta.Split('#');
+                tokens[0] = tokens[0].Replace("_'", "").Replace("_", "");
+                IBoolObservedTime observed = null;
+                if (tokens.Length == 1)
+                {
+
+                    observed = TryToCatchObservedTime(tokens[0]);
+                }
+                else if (tokens.Length == 2)
+                {
+                    observed = TryToCatchObservedTime(tokens[0], tokens[1]);
+                }
+                else observed = new BL_TimeToObserve();
+                return new BL_BooleanItemStartFinish(stateStart, stateEnd,boolName, observed);
+            }
+            return null;
+
+
+        }
 
         private static BL_BooleanItem CreatePourcentObserved(string boolName, string boolmeta)
         {
@@ -199,7 +271,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
 
                 int pctCount = 0;
                 int.TryParse(tokens[0], out pctCount);
-
+                PourcentValue value = new PourcentValue(pctCount);
 
                 IBoolObservedTime observed = null;
                 if (tokens.Length == 2)
@@ -211,11 +283,10 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 {
                     observed = TryToCatchObservedTime(tokens[1], tokens[2]);
                 }
+                else observed = new BL_TimeToObserve();
 
-                if (observed == null)
-                    return null;
 
-                return new BL_BooleanItemPourcentStateInRange(boolName, state, pctCount, valueside, observed);
+                return new BL_BooleanItemPourcentStateInRange(boolName, state, value, valueside, observed);
             }
             return null;
         }
@@ -262,8 +333,6 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                     timeObserved = TryToCatchObservedTime(tokens[1], tokens[2]);
                 }
 
-                if (timeObserved == null)
-                    return null;
 
                 return new BL_BooleanItemTimeCountInRange(boolName, timeCount, valueside, timeObserved, state);
             }
@@ -275,7 +344,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
           
             if (StartWith("⊓", ref boolmeta) || StartWith("⊔", ref boolmeta))
             {
-                AllBumpType bumpType = StartWith("⊓", ref boolmeta) ? AllBumpType.GroundBump : AllBumpType.CeilingBump;
+                AllBumpType bumpType = StartWith("⊔", ref boolmeta) ? AllBumpType.FalseBump : AllBumpType.TrueBump;
 
                 string[] tokens = boolmeta.Split('#');
 
@@ -306,6 +375,38 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 return new BL_BooleanItemBumpsInRange(boolName, obt, bumpType, count, observed);
             }
             return null;
+        }
+
+        private static Regex morseformat = new Regex("[^\\.-]");
+        private static BL_BooleanItem CreateBumpMorse(string boolName, string boolmeta)
+        {
+
+            if (StartWith("⊓", ref boolmeta) || StartWith("⊔", ref boolmeta))
+            {
+                AllBumpType bumpType = StartWith("⊔", ref boolmeta) ? AllBumpType.FalseBump : AllBumpType.TrueBump;
+
+                string[] tokens = boolmeta.Split('#');
+                tokens[0] = morseformat.Replace(tokens[0], "");
+                if (tokens[0].Length == 0)
+                    return null ;
+                
+
+                IBoolObservedTime observed = null;
+                if (tokens.Length == 2)
+                {
+
+                    observed = TryToCatchObservedTime(tokens[1]);
+                }
+                else if (tokens.Length == 3)
+                {
+                    observed = TryToCatchObservedTime(tokens[1], tokens[2]);
+                }
+
+                throw new NotImplementedException();
+               // return new BL_BooleanItemMorse(boolName, BL_BooleanItemMorse.Convert(tokens[0],'.','-','_'), observed);
+            }
+            return null;
+
         }
 
         private static BL_BooleanItem CreateSwitchAndStay(string boolName, string boolmeta)
@@ -393,7 +494,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                     return new BL_BooleanItemIsTrueOrFalseAt(boolName,observed , value);
 
                 if (observed.IsTimeRange())
-                    return new BL_BooleanItemMaintaining(boolName, observed, value);
+                    return new BL_BooleanItemIsTrueOrFalseAt(boolName, observed, value);
             }
             return null;
         }
@@ -401,16 +502,38 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
       
 
         public static BL_BooleanItem CreateExistLogic(string boolName, string boolmeta)
-        { 
-            if ( StartWith("⁉", ref boolmeta) || StartWith("?!", ref boolmeta) )
+        {
+
+            if ( StartWith("?!", ref boolmeta) || StartWith("?", ref boolmeta))
             {
-                return new BL_BooleanItemExist(boolName, BoolExistanceState.DontExist);
-            }
-            else if ( StartWith("?", ref boolmeta) )
-            {
-                return new BL_BooleanItemExist(boolName, BoolExistanceState.Exist);
+                BoolExistanceState value = StartWith("?", ref boolmeta)? BoolExistanceState.Exist:BoolExistanceState.DontExist;
+
+                string[] tokens = boolmeta.Split('#');
+                RemoveStart(ref tokens[0], "?!", "?");
+
+                IBoolObservedTime observed = null;
+                if (tokens.Length == 1)
+                {
+
+                    observed = TryToCatchObservedTime(tokens[0]);
+                }
+                else if (tokens.Length == 2)
+                {
+                    observed = TryToCatchObservedTime(tokens[0], tokens[1]);
+
+                }
+
+                if (observed == null)
+                    return new BL_BooleanItemExist(boolName, value);
+
+                if (observed.IsTimeKey())
+                    return new BL_BooleanItemExistAt(boolName,  value, observed);
+
+                if (observed.IsTimeRange())
+                    return new BL_BooleanItemExistAt(boolName, value , observed);
             }
             return null;
+
         }
 
         private static BL_BooleanItem CreateExistLogic(string boolName, bool checkExistance)
@@ -589,7 +712,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             double time;
             if (double.TryParse(timeAsString, out time))
             {
-                timeResult = new TimeInMsLong((long)(time * (double)(mutiplicator)));
+                timeResult = new TimeInMsUnsignedInteger((uint)(time * (double)(mutiplicator)));
             }
 
         }
@@ -628,6 +751,8 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 return ttype = TokenType.BooleanToken;
             if (text == "(") return ttype = TokenType.S_BRACKET;
             if (text == ")") return ttype = TokenType.E_BRACKET;
+            if (text == "1") return ttype = TokenType.ONE;
+            if (text == "0") return ttype = TokenType.ZERO;
             if (text == "[") return ttype = TokenType.S_SQUAREBRACKET;
             if (text == "]") return ttype = TokenType.E_SQUAREBRACKET;
             if (text == "|") return ttype = TokenType.B_OR;
@@ -704,6 +829,8 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
         B_ALESSOREQUALB,
         B_AMOREOREQUALB,
         B_XOR,
-        B_EQU
+        B_EQU,
+        ONE,
+        ZERO
     }
 }

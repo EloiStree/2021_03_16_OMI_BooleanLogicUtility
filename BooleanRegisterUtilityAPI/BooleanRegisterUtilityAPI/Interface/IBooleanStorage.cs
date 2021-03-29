@@ -100,6 +100,7 @@ namespace BooleanRegisterUtilityAPI.Interface
         void GetSwitchCount(out ushort switch2True, out ushort switch2False, DateTime from, DateTime to);
 
 
+        void GetPoucentOfState(bool stateObserved, out double pourcentState);
         void GetPoucentOfState(bool stateObserved, out double pourcentState, ITimeValue from, ITimeValue to);
         void GetPoucentOfState(bool stateObserved, out double pourcentState, DateTime now, DateTime from, DateTime to);
         void GetPoucentOfState(bool stateObserved, out double pourcentState, DateTime from, DateTime to);
@@ -111,18 +112,18 @@ namespace BooleanRegisterUtilityAPI.Interface
 
 
 
-        void GetTimeCount(bool stateObserved, out ulong timeFound, ITimeValue from, ITimeValue to);
-        void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime now, DateTime from, DateTime to);
-        void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime from, DateTime to);
+        void GetTimeCount(bool stateObserved, out uint pourcent);
+        void GetTimeCount(bool stateObserved, out uint timeFound, ITimeValue from, ITimeValue to);
+        void GetTimeCount(bool stateObserved, out uint timeFound, DateTime now, DateTime from, DateTime to);
+        void GetTimeCount(bool stateObserved, out uint timeFound, DateTime from, DateTime to);
 
 
         void GetState(out bool value,  ITimeValue when);
         void GetState(out bool value,  DateTime now, DateTime when);
         void GetState(out bool value,  DateTime when);
 
-
-
-
+        bool IsInRange(ITimeValue value);
+        bool IsInRange(DateTime when, DateTime time);
     }
 
     public interface INamedBooleanHistory : IBooleanHistory, INamedBoolean { }
@@ -155,7 +156,7 @@ namespace BooleanRegisterUtilityAPI.Interface
 
     public interface ITimeValue {
         void  SetAsMilliSeconds(double valueInMs);
-        void GetAsMilliSeconds(out long valueInMs);
+        void GetAsMilliSeconds(out uint valueInMs);
         double GetAsMilliSeconds();
         double GetAsSeconds();
         double GetAsMinutes();
@@ -191,20 +192,22 @@ namespace BooleanRegisterUtilityAPI.Interface
         void SetWith(IBoolTimeRange timeRange, bool isRelative);
         void SetWith(IBoolTimeKey timeRange, bool isRelative);
         ObservedTimeType GetObservedType();
+        bool IsDefined();
     }
     public enum ObservedTimeType {
-        KeyRelative, RangeRelative, KeyAbsolute, RangeAbsolute
+        KeyRelative, RangeRelative, KeyAbsolute, RangeAbsolute,
+        Undefined
     }
 
     public interface IBoolTimeRange
     {
 
-       void GetTime(DateTime now, out DateTime nearestOfNow, out DateTime farestOfNow);
+        void GetTime(DateTime now, out DateTime nearestOfNow, out DateTime farestOfNow);
     }
     public interface IBoolTimeKey
     {
 
-       void GetTime(DateTime now, out DateTime observed);
+        void GetTime(DateTime now, out DateTime observed);
     }
 
 

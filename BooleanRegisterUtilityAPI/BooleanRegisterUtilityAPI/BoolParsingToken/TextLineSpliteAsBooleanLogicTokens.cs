@@ -21,7 +21,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
 
 
 
-    public IEnumerable<string> GetTokens()
+        public IEnumerable<string> GetTokens()
         {
             return m_textTokens;
         }
@@ -76,6 +76,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             t = t.Replace("!", " ¬ ");
             t = t.Replace("~", " ¬ ");
             t = t.Replace("¬", " ¬ ");
+            t = t.Replace("=", " ≡ ");
             t = t.Replace("(", " ( ");
             t = t.Replace(")", " ) ");
             t = t.Replace("+", " & ");
@@ -107,6 +108,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             t = t.Replace(" xor ", " ⊗ ");
             t = t.Replace(" equal ", " ≡ ");
             t = t.Replace(" not ", " ! ");
+            
 
 
 

@@ -23,6 +23,18 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item.Builder
             m_tokens = tokens;
         }
 
+        public void  GetBoolItemFrom(StringTokenTypeAndSource token, out BL_BooleanItem item) {
+            item = null;
+            string id = token.GetStringSource();
+            id =id.Replace("I", "");
+            int idfound;
+            if(int.TryParse(id, out idfound)){
+                if (idfound > -1 && idfound < m_items.Count)
+                    item = m_items[idfound];
+            }
+
+        }
+
         public BL_BooleanItem[] GetItems()
         {
             return m_items.ToArray();

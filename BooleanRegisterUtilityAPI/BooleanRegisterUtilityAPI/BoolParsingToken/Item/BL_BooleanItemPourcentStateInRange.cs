@@ -1,4 +1,5 @@
-﻿using BooleanRegisterUtilityAPI.Enum;
+﻿using BooleanRegisterUtilityAPI.Beans;
+using BooleanRegisterUtilityAPI.Enum;
 using BooleanRegisterUtilityAPI.Interface;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,13 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
     public class BL_BooleanItemPourcentStateInRange : BL_BooleanItemWithObservedTime
     {
         public BoolState m_observedState;
-        public double m_pourcentIn1to100;
+        public PourcentValue m_pourcent;
         public ValueDualSide m_observedSide;
 
-        public BL_BooleanItemPourcentStateInRange(string boolNamedId,BoolState observerType, double pourcentIn1to100, ValueDualSide observedSide, IBoolObservedTime observedTime) : base(boolNamedId, observedTime)
+        public BL_BooleanItemPourcentStateInRange(string boolNamedId,BoolState observerType, PourcentValue pourcent, ValueDualSide observedSide, IBoolObservedTime observedTime) : base(boolNamedId, observedTime)
         {
             m_observedState = observerType;
-            m_pourcentIn1to100 = pourcentIn1to100;
+            m_pourcent = pourcent;
             m_observedSide = observedSide;
         }
 
@@ -35,7 +36,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
                 s = '+';
 
             //⊓⊔-+
-            return string.Format(" [⏱{0}{1}{2},{3}:{4}] ", bc, s, m_pourcentIn1to100, GetTargetName(), GetObservedTime());
+            return string.Format(" [%{0}{1}{2},{3}:{4}] ", bc, s, m_pourcent.GetPourcentAs1To100(), GetTargetName(), GetObservedTime());
         }
+
+
     }
 }

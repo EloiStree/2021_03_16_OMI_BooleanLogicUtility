@@ -7,6 +7,8 @@ using BooleanRegisterUtilityAPI.BoolParsingToken.LogicBlock;
 using BooleanRegisterUtilityAPI.BoolParsingToken.Unstore;
 using System.Collections.Generic;
 using System;
+using BooleanRegisterUtilityAPI.BoolParsingToken;
+using BooleanRegisterUtilityAPI.BoolParsingToken.Item.Builder;
 
 namespace BooleanRegisterUtilityAPI
 {
@@ -106,12 +108,20 @@ namespace BooleanRegisterUtilityAPI
         {
             logic = null;
 
-            LogicBlockBuilder builder = new LogicBlockBuilder();
-            ITimeValue tf = new TimeInMsLong(5000);
-            ITimeValue tn = new TimeInMsLong(0);
+            LogicBlockBuilder logicbuilder = new LogicBlockBuilder();
+            ITimeValue tf = new TimeInMsUnsignedInteger(5000);
+            ITimeValue tn = new TimeInMsUnsignedInteger(0);
 
             IBoolObservedTime key = new BL_TimeToObserve(true, new BL_RelativeTimeFromNow(tf));
             IBoolObservedTime range = new BL_TimeToObserve(true, new BL_RelativeTimeDurationFromNow(tn,tf));
+            StringTokenTypeAndSource ts;
+            BLTokensToBLBuilder.GetTokenFrom(condition, out ts);
+
+
+            BL_BuilderElements elements;
+            TextLineSpliteAsBooleanLogicTokens t = new TextLineSpliteAsBooleanLogicTokens(condition, false);
+            BLTokensToBLBuilder tokenbuilder = new BLTokensToBLBuilder(t, out elements);
+
             //logic = builder.Start(new AndLogic(
             //    new RegisterRefStateTrueBlock(m_defaultregister, new BL_BooleanItemDefault("up")),
             //    new RegisterRefBoolExistBlock(m_defaultregister, new BL_BooleanItemExist("up")),

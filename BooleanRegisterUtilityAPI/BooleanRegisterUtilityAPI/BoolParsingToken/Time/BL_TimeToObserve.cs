@@ -22,6 +22,10 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item.Time
             SetWith(timeobserved, isRelative);
         }
 
+        public BL_TimeToObserve()
+        {
+        }
+
         public IBoolTimeKey GetTimeKey()
         {
             return m_key;
@@ -68,6 +72,8 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item.Time
 
         public override string ToString()
         {
+            if (!IsDefined())
+                return " [t none] ";
             return string.Format(" [t{0},{1}] ", IsRelativeToNow()?"r":"a", ""+m_key+""+m_range);
         }
 
@@ -77,7 +83,12 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item.Time
             if (m_isRelative && GetTimeRange() != null) return ObservedTimeType.RangeRelative;
             if (!m_isRelative && GetTimeKey() != null) return ObservedTimeType.KeyAbsolute;
             if (!m_isRelative && GetTimeRange() != null) return ObservedTimeType.RangeAbsolute;
-            throw new Exception("Time key and range should never be null at the same time");
+            return ObservedTimeType.Undefined;
+        }
+
+        public bool IsDefined()
+        {
+            return m_key != null || m_range != null;
         }
     }
 }

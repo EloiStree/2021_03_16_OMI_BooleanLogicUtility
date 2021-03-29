@@ -7,9 +7,9 @@ using System.Collections.Generic;
 public class BoolStatePeriode
 {
     public BooleanChangeType m_state;
-    public long m_elapsedTimeMs;
+    public uint m_elapsedTimeMs;
 
-    public BoolStatePeriode(bool state, long elapsedTimeMs = 0)
+    public BoolStatePeriode(bool state, uint elapsedTimeMs = 0)
     {
         m_state = GetChangeType(state);
         m_elapsedTimeMs = elapsedTimeMs;
@@ -19,14 +19,14 @@ public class BoolStatePeriode
     public void SetStateTo(BooleanChangeType value) { m_state = value; }
     public bool GetState() { return m_state == BooleanChangeType.SetTrue; }
     public double GetElpasedTimeAsSecond() { return ((double)m_elapsedTimeMs)/1000.0; }
-    public long GetElpasedTimeAsLongMs() { return m_elapsedTimeMs; }
+    public uint GetElpasedTimeAsLongMs() { return m_elapsedTimeMs; }
 
-    public void AddSomeElapsedTime(long timeInMs)
+    public void AddSomeElapsedTime(uint timeInMs)
     {
         m_elapsedTimeMs += timeInMs;
     }
     public void AddSomeElapsedTime(ITimeValue time) {
-        long t;
+        uint t;
         time.GetAsMilliSeconds(out t);
         m_elapsedTimeMs += t;
     }

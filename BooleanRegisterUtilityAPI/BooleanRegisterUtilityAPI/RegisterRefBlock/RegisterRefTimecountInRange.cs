@@ -31,35 +31,51 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
             { return; }
 
             IBoolObservedTime time = m_value.GetObservedTime();
-            if (time.GetTimeKey() != null)
+
+
+            uint timeInMs = 0;
+            if (time == null || !time.IsDefined())
             {
-                throw new Exception("The code is design to work in range not in key");
+                history.GetTimeCount(
+                   m_value.m_stateObserved == BoolState.True ? true : false,
+                   out timeInMs);
 
             }
-            else if (time.GetTimeRange() != null)
+            else
             {
 
-                DateTime near, far;
-                time.GetTimeRange().GetTime(when, out near, out far);
-
-                ulong timeInMs = 0;
-                history.GetTimeCount(true,  out timeInMs,when, near, far);
-                ulong msObserved = (ulong)m_value.GetMilliSeconds();
-
-                if (m_value.m_sideType == ValueDualSide.Less && timeInMs < msObserved  )
+                DateTime near = when, far = when;
+                if (time.GetTimeKey() != null)
                 {
-                    value = true;
+                    near = when;
+                    time.GetTimeKey().GetTime(when, out far);
+
                 }
-                else if (m_value.m_sideType == ValueDualSide.More && timeInMs > msObserved  )
+                else if (time.GetTimeRange() != null)
                 {
-                    value = true;
+
+                    time.GetTimeRange().GetTime(when, out near, out far);
                 }
-                else value = false;
-
-                computed = true;
-                return;
-
+                history.GetTimeCount(
+                        m_value.m_stateObserved == BoolState.True ? true : false,
+                        out timeInMs, when, near, far);
             }
+            uint to = 0;
+            m_value.m_timeObserved.GetAsMilliSeconds(out to);
+            if (m_value.m_sideType == ValueDualSide.Less && timeInMs <= to)
+            {
+                value = true;
+            }
+            else if (m_value.m_sideType == ValueDualSide.More && timeInMs >= to)
+            {
+                value = true;
+            }
+            else value = false;
+
+            computed = true;
+            return;
+
+
         }
 
         public override void Get(out bool value, out bool computed)

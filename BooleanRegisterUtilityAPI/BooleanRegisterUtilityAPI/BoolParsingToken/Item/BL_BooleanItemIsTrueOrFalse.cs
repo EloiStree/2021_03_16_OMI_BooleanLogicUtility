@@ -24,6 +24,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
             m_value = value?BoolState.True: BoolState.False;
         }
         public BoolState GetObserved() { return m_value; }
+        public bool GetObservedAsBool() { return m_value== BoolState.True; }
 
         public override string ToString()
         {

@@ -157,17 +157,17 @@ namespace BooleanRegisterUtilityAPI.Beans
             m_boolState.GetBumpsCount( bumb, out  count,  from,  to);
         }
 
-        public void GetTimeCount(bool stateObserved, out ulong timeFound, ITimeValue from, ITimeValue to)
+        public void GetTimeCount(bool stateObserved, out uint timeFound, ITimeValue from, ITimeValue to)
         {
             m_boolState.GetTimeCount( stateObserved, out  timeFound,  from,  to);
         }
 
-        public void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime now, DateTime from, DateTime to)
+        public void GetTimeCount(bool stateObserved, out uint timeFound, DateTime now, DateTime from, DateTime to)
         {
             m_boolState.GetTimeCount( stateObserved, out  timeFound,  now,  from,  to);
         }
 
-        public void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime from, DateTime to)
+        public void GetTimeCount(bool stateObserved, out uint timeFound, DateTime from, DateTime to)
         {
             m_boolState.GetTimeCount( stateObserved, out  timeFound,  from,  to);
         }
@@ -211,5 +211,27 @@ namespace BooleanRegisterUtilityAPI.Beans
         {
             m_boolState.StartAndFinishState(stateStart, statEnd, out result, from, to);
         }
+
+        public bool IsInRange(ITimeValue value)
+        {
+           return  m_boolState.IsInRange(value);
+        }
+
+        public bool IsInRange(DateTime when, DateTime time)
+        {
+            return m_boolState.IsInRange(when, time);
+        }
+
+        public void GetPoucentOfState(bool observed, out double pourcent)
+        {
+            m_boolState.GetPoucentOfState(observed, out pourcent);
+        }
+
+        public void GetTimeCount(bool stateObserved, out uint pourcent)
+        {
+            m_boolState.GetTimeCount( stateObserved, out pourcent);
+        }
+
+      
     }
 }

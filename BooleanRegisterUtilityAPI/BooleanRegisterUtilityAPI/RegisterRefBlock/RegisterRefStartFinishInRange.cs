@@ -34,16 +34,27 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
             { return; }
 
             IBoolObservedTime time = m_observed.GetObservedTime();
+            if (!time.IsDefined())
+            {
+                return;
+
+            }
+
+
+            DateTime near, far;
+            near = far = when;
             if (time.GetTimeKey() != null)
             {
-                throw new Exception("The code is design to work in range not in key");
+                near = when;
+                time.GetTimeKey().GetTime(when, out far);
 
             }
             else if (time.GetTimeRange() != null)
             {
 
-                DateTime near, far;
                 time.GetTimeRange().GetTime(when, out near, out far);
+            }
+           
 
                 history.StartAndFinishState(m_observed.GetStartValue(),m_observed.GetEndValue(), out value,
                    when, near, far);
@@ -51,7 +62,7 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
                 computed = true;
                 return;
 
-            }
+            
         }
 
         public override void Get(out bool value, out bool computed)

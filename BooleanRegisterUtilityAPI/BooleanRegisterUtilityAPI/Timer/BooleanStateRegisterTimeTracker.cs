@@ -22,7 +22,7 @@ namespace BooleanRegisterUtilityAPI.Timer
 
         public void AddTimePast() {
             m_now = DateTime.Now;
-            m_reg.AddMilliSecondsElapsedTimeToAll((long)(m_now - m_previous).TotalMilliseconds);
+            m_reg.AddMilliSecondsElapsedTimeToAll((uint)(m_now - m_previous).TotalMilliseconds);
             m_previous = m_now;
         }
     }

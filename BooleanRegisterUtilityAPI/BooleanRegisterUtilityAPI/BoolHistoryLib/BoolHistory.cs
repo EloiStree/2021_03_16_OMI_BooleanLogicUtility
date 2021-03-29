@@ -26,9 +26,9 @@ public class BoolHistory : IBooleanHistory
 
     }
 
-    public long GetTimeOverwatch()
+    public uint GetTimeOverwatch()
     {
-        long t = 0;
+        uint t = 0;
         for (int i = 0; i < m_switchesTracks.Count; i++)
         {
             t += m_switchesTracks[i].GetElpasedTimeAsLongMs();
@@ -42,11 +42,11 @@ public class BoolHistory : IBooleanHistory
     }
     public void AddElapsedTime(ITimeValue time)
     {
-        long ms;
+        uint ms;
         time.GetAsMilliSeconds(out ms);
         GetInProgressState().AddSomeElapsedTime(ms);
     }
-    public void AddMilliSecondElapsedTime(long timeInMs)
+    public void AddMilliSecondElapsedTime(uint timeInMs)
     {
         GetInProgressState().AddSomeElapsedTime(timeInMs);
     }
@@ -115,7 +115,7 @@ public class BoolHistory : IBooleanHistory
     public static void DateTimeToTimeValue(DateTime now, DateTime time, out ITimeValue elipsedValue)
     {
 
-        elipsedValue = new TimeInMsLong((long)(Math.Abs((now - time).TotalMilliseconds)));
+        elipsedValue = new TimeInMsUnsignedInteger((uint)(Math.Abs((now - time).TotalMilliseconds)));
     }
     public static void DateTimeToTimeValueFromNow(DateTime time, out ITimeValue elipsedValue)
     {
@@ -132,11 +132,11 @@ public class BoolHistory : IBooleanHistory
     public void GetPeriodeAt(ITimeValue relativeTime, out BoolStatePeriode state)
     {
         state = null;
-        long currentPeriodeMs = 0;
-        long time = 0;
+        uint currentPeriodeMs = 0;
+        uint time = 0;
         relativeTime.GetAsMilliSeconds(out time);
 
-        long start = 0, end = 0;
+        uint start = 0, end = 0;
 
         int i = 0;
         bool isInRange;
@@ -163,21 +163,21 @@ public class BoolHistory : IBooleanHistory
     
     public void GetTruncatedHistoryCopy(ITimeValue nearestFromNow, ITimeValue farestFromNow, out RelativeTruncatedBoolHistory troncatedHistory)
     {
-        troncatedHistory = new RelativeTruncatedBoolHistory(this, nearestFromNow, farestFromNow);
+        troncatedHistory = new RelativeTruncatedBoolHistory(this, nearestFromNow, farestFromNow, IsInRange(farestFromNow));
 
         BoolStatePeriode current;
         List<BoolStatePeriode> l = new List<BoolStatePeriode>();
 
-        long start = 0, end = 0;
+        uint start = 0, end = 0;
 
 
-        long timeNearest = 0;
-        long timeFarest = 0;
+        uint timeNearest = 0;
+        uint timeFarest = 0;
 
         nearestFromNow.GetAsMilliSeconds(out timeNearest);
         farestFromNow.GetAsMilliSeconds(out timeFarest);
 
-        long currentPeriodeMs = 0;
+        uint currentPeriodeMs = 0;
 
         int i = 0;
         bool isInStartRange;
@@ -215,7 +215,25 @@ public class BoolHistory : IBooleanHistory
         }
     }
 
+    public bool IsInRange(ITimeValue farestFromNow)
+    {
+        long maxTinMs = GetTimeOverwatch();
+        uint farestTime;
+        farestFromNow.GetAsMilliSeconds(out farestTime);
+        return farestTime <= maxTinMs;
+    }
 
+    public bool IsInRange(DateTime when, DateTime time)
+    {
+        ITimeValue t;
+        ConvertDateToTime(when, time, out t);
+        return IsInRange(t);
+    }
+
+    private void ConvertDateToTime(DateTime when, DateTime time, out ITimeValue timeBetween)
+    {
+        timeBetween = new TimeInMsUnsignedInteger((uint)(Math.Abs((when - time).TotalMilliseconds)));
+    }
 
     public bool HasChange(ITimeValue nearestFromNow, ITimeValue farestFromNow, out int trueCount, out int falseCount)
     {
@@ -258,6 +276,8 @@ public class BoolHistory : IBooleanHistory
         WasSwitchToTrue(out result, DateTime.Now, from, to);
     }
 
+   
+
     public void WasSwitchToFalse(out bool result, ITimeValue from, ITimeValue to)
     {
         WasSwitchTo(false, out result, from, to);
@@ -271,8 +291,8 @@ public class BoolHistory : IBooleanHistory
     }
     public void ConvertDateToTime(DateTime now, DateTime from, DateTime to, out ITimeValue fromValue, out ITimeValue toValue) {
 
-        fromValue = new TimeInMsLong((long)((now - from).TotalMilliseconds));
-        toValue = new TimeInMsLong((long)((now - from).TotalMilliseconds));
+        fromValue = new TimeInMsUnsignedInteger((uint)(Math.Abs((now - from).TotalMilliseconds)));
+        toValue = new TimeInMsUnsignedInteger((uint)(Math.Abs((now - to).TotalMilliseconds)));
 
     }
     public void WasSwitchToFalse(out bool result, DateTime from, DateTime to)
@@ -284,10 +304,8 @@ public class BoolHistory : IBooleanHistory
     {
         RelativeTruncatedBoolHistory truncate;
         GetTruncatedHistoryCopy(from, to, out truncate);
-        if (stateObserved)
-            result = truncate.IsMaintaining();
-        else 
-            result = truncate.IsRealeasing();
+        
+        result = truncate.IsMaintaining(stateObserved);
         
     }
 
@@ -345,6 +363,18 @@ public class BoolHistory : IBooleanHistory
         GetSwitchCount(out switch2True, out switch2False, DateTime.Now, from, to);
     }
 
+
+    public void GetPoucentOfState(bool observed, out double pourcent)
+    {
+        GetPoucentOfState(observed, out pourcent, new TimeInMsUnsignedShort(0), GetTimeOverwatchAsTimeValue());
+    }
+   
+
+    private ITimeValue GetTimeOverwatchAsTimeValue()
+    {
+        return new TimeInMsUnsignedInteger(GetTimeOverwatch());
+    }
+
     public void GetPoucentOfState(bool stateObserved, out double pourcentState, ITimeValue from, ITimeValue to)
     {
         RelativeTruncatedBoolHistory truncate;
@@ -384,29 +414,32 @@ public class BoolHistory : IBooleanHistory
     {
         GetBumpsCount( bumb, out count, DateTime.Now, from, to);
     }
-
-    public void GetTimeCount(bool stateObserved, out ulong timeFound, ITimeValue from, ITimeValue to)
+    public void GetTimeCount(bool stateObserved, out uint timeCountInMs)
+    {
+        GetTimeCount(stateObserved, out timeCountInMs, new TimeInMsUnsignedShort(0), GetTimeOverwatchAsTimeValue());
+    }
+    public void GetTimeCount(bool stateObserved, out uint timeFound, ITimeValue from, ITimeValue to)
     {
         RelativeTruncatedBoolHistory truncate;
         GetTruncatedHistoryCopy(from, to, out truncate);
-        long t, f, o;
+        uint t, f, o;
         truncate.GetTrueAndFalseTimecount(out t, out f ,out o) ;
 
         if (stateObserved)
-            timeFound = (ulong) t;
+            timeFound =  t;
         else
-            timeFound = (ulong) f;
+            timeFound =  f;
 
     }
 
-    public void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime now, DateTime from, DateTime to)
+    public void GetTimeCount(bool stateObserved, out uint timeFound, DateTime now, DateTime from, DateTime to)
     {
         ITimeValue fromV, toV;
         ConvertDateToTime(now, from, to, out fromV, out toV);
         GetTimeCount(stateObserved , out timeFound, fromV, toV);
     }
 
-    public void GetTimeCount(bool stateObserved, out ulong timeFound, DateTime from, DateTime to)
+    public void GetTimeCount(bool stateObserved, out uint timeFound, DateTime from, DateTime to)
     {
         GetTimeCount(stateObserved, out timeFound, DateTime.Now, from, to);
     }
@@ -421,7 +454,7 @@ public class BoolHistory : IBooleanHistory
 
     public void GetState(out bool value, DateTime now, DateTime when)
     {
-        GetState(out value,  new TimeInMsLong((long)((now - when).TotalMilliseconds)) );
+        GetState(out value,  new TimeInMsUnsignedInteger((uint)((now - when).TotalMilliseconds)) );
     }
 
     public void GetState(out bool value, DateTime when)

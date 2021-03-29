@@ -34,34 +34,51 @@ namespace BooleanRegisterUtilityAPI
             IBooleanHistory history;
             bool historyExist;
             base.m_defaultregister.GetRef().GetHistoryAccess(name, out history, out historyExist);
-            if (!historyExist)
+            if (history==null)
             { return; }
+
 
             IBoolObservedTime time = m_booleanItemIsTrueOrFalseAt.GetObservedTime();
             if (time.GetTimeKey() != null)
             {
-                DateTime t;
-                time.GetTimeKey().GetTime(when, out t);
-                bool state;
-                history.GetState(out state, t);
-                computed = true;
-                value = state == (m_booleanItemIsTrueOrFalseAt.m_stateObserved == BoolState.True);
-                return;
 
+                    DateTime t;
+                    time.GetTimeKey().GetTime(when, out t);
+
+                    if (!history.IsInRange(when, t)) {
+                        computed = false;
+                        value = false;
+                        return;
+                    }
+                    bool state;
+                    history.GetState(out state,when, t);
+                    computed = true;
+                    value = state == m_booleanItemIsTrueOrFalseAt.GetBoolAsValue();
+                return;
             }
             else if (time.GetTimeRange() != null)
             {
 
                 DateTime t1, t2;
                 time.GetTimeRange().GetTime(when, out t1, out t2);
+             
+                if (!history.IsInRange(when, t2))
+                {
+                    computed = false;
+                    value = false;
+                    return;
+                }
 
-                bool state;
-                history.WasMaintainedTrue(out state, t1, t2);
+                if (m_booleanItemIsTrueOrFalseAt.GetBoolAsValue())
+                    history.WasMaintainedTrue(out value,when, t1, t2);
+                else history.WasMaintainedFalse(out value, when, t1, t2);
+
                 computed = true;
-                value = state == (m_booleanItemIsTrueOrFalseAt.m_stateObserved == BoolState.True);
                 return;
 
             }
+            if(time==null || (time.GetTimeKey()==null && time.GetTimeRange()==null))
+                throw new Exception("If you create a State AT you must check time. Else use RefStateBlock that us more direct access to the data.");
         }
 
 

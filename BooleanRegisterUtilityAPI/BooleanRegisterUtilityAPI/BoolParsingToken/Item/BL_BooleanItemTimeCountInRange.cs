@@ -21,9 +21,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
             m_stateObserved = stateObserved;
         }
 
-        public long GetMilliSeconds()
+        public uint GetMilliSeconds()
         {
-            long tmp;
+            uint tmp;
             m_timeObserved.GetAsMilliSeconds(out tmp);
             return tmp;
         }
@@ -40,7 +40,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
             if (m_sideType == ValueDualSide.More)
                 s = '+';
 
-            long ms=0;
+            uint ms =0;
             if(m_timeObserved!=null)
             m_timeObserved.GetAsMilliSeconds(out ms);
             //⊓⊔-+

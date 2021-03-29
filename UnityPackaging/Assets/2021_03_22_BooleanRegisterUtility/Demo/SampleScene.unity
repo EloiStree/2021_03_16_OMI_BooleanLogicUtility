@@ -444,6 +444,71 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1289359911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1289359913}
+  - component: {fileID: 1289359912}
+  m_Layer: 0
+  m_Name: TimeTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1289359912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289359911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3e4a93b7b44920438d6f568fd3a719d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ulong: 18446744073709551615
+  m_long: 9223372036854775807
+  m_int: 2147483647
+  m_uint: 4294967295
+  m_ushort: 65535
+  m_short: 32767
+  m_ulongSec: 1,84467440737096E+16
+  m_longSec: 9,22337203685478E+15
+  m_intSec: 2147483,647
+  m_uintSec: 4294967,295
+  m_ushortSec: 65,535
+  m_shortSec: 32,767
+  m_ulongHour: 5124095576030,43
+  m_longHour: 2562047788015,22
+  m_intHour: 596,523235277778
+  m_uintHour: 1193,04647083333
+  m_ulongDay: 213503982334
+  m_longDay: 106751991167
+  m_intDay: 24
+  m_uintDay: 49
+  m_ulongYear: 584942417
+  m_longYear: 292471208
+--- !u!4 &1289359913
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289359911}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1297763489
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,14 +874,32 @@ MonoBehaviour:
   m_debugRegister: 
   m_toTest:
   - space?
-  - "up\u203E500"
-  - "up\u2191200#400"
-  - "up\u2913#5000"
-  - "up\u2293#5000"
-  - "up\u23F1#5000"
-  - "up\u23F1%60#5000"
+  - up
+  - "up\u203E"
+  - "up\u203E3000"
+  - up_5000
+  - up_0#3000
+  - "up\u203E3000#5000"
+  - up?5000#6000
+  - up%80
+  - "up%\u203E>80#5000#6000"
+  - up%_<80#3s
+  - "up\u22931#3s"
+  - "up\u22932#3s#6s"
+  - "up\u2293+4#0s#6s"
+  - "up\u22941#0s#4s"
+  - "up\u21930s#4s"
+  - "up\u21914s"
+  - "up\u203E_500"
+  - "up\u203E\u203E500#1500"
+  - "up\u2293...---...#500#4000"
+  - "up\u2294...---...#5000"
+  - "up\u2294..._.._.#5000"
   m_result: []
   m_didNotParsed: []
+  sizeTest: 0
+  sizeTest2: 0
+  catchException: 1
 --- !u!1 &2042656173
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,7 +1022,7 @@ MonoBehaviour:
   m_debugStringPastToNow: 
   m_debugDisplayPastToNow: {fileID: 0}
   m_timeA: 3000
-  m_timeB: 8000
+  m_timeB: 5000
   m_debugStringAB: 
   m_debugDisplayAB: {fileID: 709250752}
   m_isMaintaining: 0
@@ -958,6 +1041,7 @@ MonoBehaviour:
   m_holesOnTrueGround: []
   m_holesOnFalseGround: []
   history:
+    m_isInRecordedRange: 0
     m_valueIfEmpty: 0
     m_foundFromNowToPast: []
 --- !u!4 &2098934929

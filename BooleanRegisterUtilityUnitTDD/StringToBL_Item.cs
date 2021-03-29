@@ -21,9 +21,9 @@ namespace BooleanRegisterUtilityUnitTDD
 
             BooleanStateRegister m_register= new BooleanStateRegister();
             RefBooleanRegister m_refregister = new RefBooleanRegister(m_register);
-            Console.WriteLine("0 " + RegisterRefStringParser.TryToParse(m_refregister, "up_500"));
-            Console.WriteLine("1 " + RegisterRefStringParser.TryToParse(m_refregister, "up↓500#2000"));
-            Console.WriteLine("2 " + RegisterRefStringParser.TryToParse(m_refregister,"up⏱_500#20#2000"));
+            Console.WriteLine("0 " + RegisterRefStringParser.TryToParseItem(m_refregister, "up_500"));
+            Console.WriteLine("1 " + RegisterRefStringParser.TryToParseItem(m_refregister, "up↓500#2000"));
+            Console.WriteLine("2 " + RegisterRefStringParser.TryToParseItem(m_refregister,"up⏱_500#20#2000"));
             //V
 
         }

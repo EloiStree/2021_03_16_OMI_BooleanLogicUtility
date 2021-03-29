@@ -4,6 +4,8 @@ using BooleanRegisterUtilityAPI.RegisterRefBlock;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class ItemParseTestMono : AbstractRegisterTestMono
@@ -16,6 +18,8 @@ public class ItemParseTestMono : AbstractRegisterTestMono
     };
     public List<LogicUnitTest> m_result= new List<LogicUnitTest>();
     public List<string> m_didNotParsed = new List<string>();
+    public long sizeTest;
+    public long sizeTest2;
     [System.Serializable]
     public class LogicUnitTest{
 
@@ -26,19 +30,40 @@ public class ItemParseTestMono : AbstractRegisterTestMono
         public string m_boolLogicStringType;
         public string m_boolLogicStringOrigine;
     }
+    public bool catchException=true;
 
     public override void DoTheThing()
     {
         for (int i = 0; i < m_result.Count; i++)
         {
-            m_result[i].m_boolLogic.Get(out m_result[i].m_boolValue, out m_result[i].m_boolComputed);
+            if (catchException) { 
+               try
+               {
+                 m_result[i].m_boolLogic.Get(out m_result[i].m_boolValue, out m_result[i].m_boolComputed);
+               }
+               catch (Exception e) {
+                   Debug.Log("Did not computed: " +e.StackTrace);
+               }
+            }
+            else
+                m_result[i].m_boolLogic.Get(out m_result[i].m_boolValue, out m_result[i].m_boolComputed);
         }
     }
 
+    public long GetSizeOfObject(object target) {
+        long size = 0;
+        using (Stream s = new MemoryStream())
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(s, target);
+            size = s.Length;
+        }
+        return size;
+    }
     public override void Init()
     {
-        Debug.Log(RegisterRefStringParser.TryToParse(m_refregister, "up↓500#2000"));
-        
+     
+
         for (int i = 0; i < m_toTest.Length; i++)
         {
             try
@@ -56,7 +81,7 @@ public class ItemParseTestMono : AbstractRegisterTestMono
                         });
                 else m_didNotParsed.Add(m_toTest[i]);
             }
-            catch (Exception) { Debug.Log("Hum:" + m_toTest[i]); }
+            catch (Exception e) { Debug.Log("Hum," + m_toTest[i] + ":" +e.StackTrace ); }
         }
     }
 }

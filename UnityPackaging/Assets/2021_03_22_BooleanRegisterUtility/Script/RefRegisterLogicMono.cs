@@ -54,12 +54,12 @@ public class RefRegisterLogicMono : MonoBehaviour
 
         IBoolObservedTime key = new BL_TimeToObserve(true,
             new BL_RelativeTimeFromNow(
-                new TimeInMsLong((long)(m_key * 1000.0))));
+                new TimeInMsUnsignedInteger((uint)(m_key * 1000.0))));
 
         IBoolObservedTime range = new BL_TimeToObserve(true,
             new BL_RelativeTimeDurationFromNow(
-                new TimeInMsLong((long)(m_start * 1000.0)),
-            new TimeInMsLong((long)(m_end * 1000.0))));
+                new TimeInMsUnsignedInteger((uint)(m_start * 1000.0)),
+            new TimeInMsUnsignedInteger((uint)(m_end * 1000.0))));
 
 
         m_boolExist = new RegisterRefBoolExistBlock(m_refregister,
@@ -75,13 +75,13 @@ public class RefRegisterLogicMono : MonoBehaviour
             new BL_BooleanItemIsTrueOrFalseAt("up", key, true));
         
         m_boolPourcent = new RegisterRefPourcentStateInRange(m_refregister,
-            new BL_BooleanItemPourcentStateInRange("up", BoolState.True, 0.8,
+            new BL_BooleanItemPourcentStateInRange("up", BoolState.True, new PourcentValue(0.8),
             ValueDualSide.More, range));
         m_timeCount = new RegisterRefTimecountInRange(m_refregister,
-            new BL_BooleanItemTimeCountInRange("up", new TimeInMsLong(600), ValueDualSide.More, range, BoolState.True)
+            new BL_BooleanItemTimeCountInRange("up", new TimeInMsUnsignedInteger(600), ValueDualSide.More, range, BoolState.True)
             );
         m_boolbump = new RegisterRefBumpsInRange(m_refregister,
-            new BL_BooleanItemBumpsInRange("up", ObservedBumpType.Equal, AllBumpType.GroundBump, 2, range));
+            new BL_BooleanItemBumpsInRange("up", ObservedBumpType.Equal, AllBumpType.FalseBump, 2, range));
         m_boolMaintaining = new RegisterRefMaintainingBlock(m_refregister,
             new BL_BooleanItemMaintaining("up", range, true));
         m_boolStartFinish = new RegisterRefStartFinishInRange(m_refregister,

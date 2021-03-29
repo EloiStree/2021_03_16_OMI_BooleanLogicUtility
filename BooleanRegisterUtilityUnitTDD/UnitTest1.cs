@@ -52,7 +52,7 @@ namespace BooleanRegisterUtilityUnitTDD
                 new bool[] { false, false, false, false });
             DisplayInformatoinAboutKeys();
 
-            BL_BooleanItemBumpsInRange bumpRang = new BL_BooleanItemBumpsInRange("test", ObservedBumpType.Equal, AllBumpType.GroundBump, 3, null);
+            BL_BooleanItemBumpsInRange bumpRang = new BL_BooleanItemBumpsInRange("test", ObservedBumpType.Equal, AllBumpType.FalseBump, 3, null);
             Console.WriteLine("Test t " + (m_register == BL.GetRegister()));
  
             Console.WriteLine("> REGISTER STATE:\n " + m_register.GetFullHistoryDebugText());

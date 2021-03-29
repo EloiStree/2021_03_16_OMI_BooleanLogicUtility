@@ -29,7 +29,7 @@ namespace BooleanRegisterUtilityAPI.BooleanLogic.Time
             return string.Format("T{0}ms", m_timeInMilliSeconds);
         }
 
-        public void GetAsMilliSeconds(out long valueInMs)
+        public void GetAsMilliSeconds(out uint valueInMs)
         {
             valueInMs = m_timeInMilliSeconds;
         }

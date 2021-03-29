@@ -11,23 +11,31 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
 {
     public class RegisterRefStringParser
     {
-        public static LogicBlock TryToParse(RefBooleanRegister registerRef, string text)
+        public static LogicBlock TryToParseItem(RefBooleanRegister registerRef, string text)
         {
             bool p;
             LogicBlock i;
-            TryToParse(registerRef, text, out p, out i);
+            TryToParseItem(registerRef, text, out p, out i);
             return i;
         }
-            public static void TryToParse(RefBooleanRegister registerRef, string text,out bool parsed, out LogicBlock item) {
-             BL_BooleanItem bi= BLTokensToBLBuilder.TryToParse(text);
+            public static void TryToParseItem(RefBooleanRegister registerRef, string text,out bool parsed, out LogicBlock item)
+        {
+            BL_BooleanItem bi = BLTokensToBLBuilder.TryToParse(text);
+
+            BLItemToRegisterLogicBlock(registerRef,  bi, out parsed, out item);
+
+        }
+
+        private static void BLItemToRegisterLogicBlock(RefBooleanRegister registerRef, BL_BooleanItem bi , out bool parsed, out LogicBlock item)
+        {
+
             parsed = false;
             item = null;
-            
-             if (bi.GetType() == typeof(BL_BooleanItemIsTrueOrFalse))
+            if (bi.GetType() == typeof(BL_BooleanItemIsTrueOrFalse))
             {
                 BL_BooleanItemIsTrueOrFalse tmp = (BL_BooleanItemIsTrueOrFalse)bi;
                 item = new RegisterRefStateBlock(
-                    registerRef, tmp); 
+                    registerRef, tmp);
                 parsed = true;
             }
             else if (bi.GetType() == typeof(BL_BooleanItemIsTrueOrFalseAt))
@@ -35,7 +43,7 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
                 BL_BooleanItemIsTrueOrFalseAt tmp = (BL_BooleanItemIsTrueOrFalseAt)bi;
 
                 item = new RegisterRefStateAtBlock(
-                    registerRef,tmp);
+                    registerRef, tmp);
                 parsed = true;
             }
             else if (bi.GetType() == typeof(BL_BooleanItemStartFinish))
@@ -80,11 +88,19 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
                     registerRef, (BL_BooleanItemBumpsInRange)bi);
                 parsed = true;
             }
-           
+
             else if (bi.GetType() == typeof(BL_BooleanItemDefault))
             {
                 BL_BooleanItemDefault tmp = (BL_BooleanItemDefault)bi;
                 item = new RegisterRefStateTrueBlock(
+                 registerRef, tmp);
+                parsed = true;
+
+            }
+            else if (bi.GetType() == typeof(BL_BooleanItemExistAt))
+            {
+                BL_BooleanItemExistAt tmp = (BL_BooleanItemExistAt)bi;
+                item = new RegisterRefBoolExistAtBlock(
                  registerRef, tmp);
                 parsed = true;
 
@@ -96,8 +112,18 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
                     registerRef, (BL_BooleanItemExist)bi);
                 parsed = true;
             }
-
         }
 
+        public static void TryToParseAndSetItem(RefBooleanRegister refRegister, BL_ToBeDefined tb)
+        {
+            bool parsed;  
+            LogicBlock logic;
+            if (tb == null || tb.m_item==null) 
+                return ;
+            
+            BLItemToRegisterLogicBlock(refRegister, tb.m_item, out parsed, out logic);
+            if (logic != null)
+                tb.SetDefinition(logic);
+        }
     }
 }

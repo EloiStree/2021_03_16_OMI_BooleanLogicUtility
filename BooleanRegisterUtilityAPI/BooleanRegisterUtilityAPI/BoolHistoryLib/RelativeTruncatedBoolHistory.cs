@@ -10,17 +10,20 @@ public class RelativeTruncatedBoolHistory
     public BoolHistory m_origine;
     public ITimeValue m_nearestFromNow;
     public ITimeValue m_farestFromNow;
+    public bool m_isInRecordedRange;
     public bool m_valueIfEmpty;
+
     public List<BoolStatePeriode> m_foundFromNowToPast = new List<BoolStatePeriode>();
 
 
-    public RelativeTruncatedBoolHistory(BoolHistory origine, ITimeValue nearestFromNow, ITimeValue farestFromNow)
+    public RelativeTruncatedBoolHistory(BoolHistory origine, ITimeValue nearestFromNow, ITimeValue farestFromNow, bool isInRecordedRange)
     {
         m_origine = origine;
         m_nearestFromNow = nearestFromNow;
         m_farestFromNow = farestFromNow;
+        m_isInRecordedRange = isInRecordedRange;
     }
-    public void AddInNowFront(long  elipseTimeInMs, bool state)
+    public void AddInNowFront(uint elipseTimeInMs, bool state)
     {
         m_foundFromNowToPast.Insert(0, new BoolStatePeriode(state, elipseTimeInMs));
     }
@@ -29,7 +32,7 @@ public class RelativeTruncatedBoolHistory
 
         m_foundFromNowToPast.Insert(0, periode);
     }
-    public void AddInLaterBack(long elipseTimeInMs, bool state)
+    public void AddInLaterBack(uint elipseTimeInMs, bool state)
     {
 
         m_foundFromNowToPast.Add(new BoolStatePeriode(state, elipseTimeInMs));
@@ -102,6 +105,9 @@ public class RelativeTruncatedBoolHistory
             }
         }
     }
+    public bool IsInObserveRange() {
+        return m_isInRecordedRange;
+    }
     public void GetSwitchCount(out int trueCount, out int falseCount)
     {
         trueCount = falseCount = 0;
@@ -119,12 +125,24 @@ public class RelativeTruncatedBoolHistory
         }
     }
 
+
+
     public bool IsMaintaining(bool maintainingType)
     {
-        if (maintainingType)
-            return IsEmpty() && GetValueIfEmpty() == true;
-        if (!maintainingType)
-            return IsEmpty() && GetValueIfEmpty() == false;
+        if (IsEmpty()) {
+            if (maintainingType == true && GetValueIfEmpty()==true)
+                return true;
+            if (maintainingType == false && GetValueIfEmpty()==false)
+                return true; 
+            return false;
+        }
+
+        double pt, pf;
+        GetTrueAndFalsePourcent(out pt, out pf);
+        if (maintainingType==true && pt >=1.0)
+            return true;
+        if (maintainingType==false && pf >= 1.0)
+            return true;
         return false;
     }
     public bool IsMaintaining()
@@ -140,11 +158,11 @@ public class RelativeTruncatedBoolHistory
     public void GetPeriodeAt(ITimeValue relativeTime, out BoolStatePeriode state)
     {
         state = null;
-        long currentPeriodeMs = 0;
-        long time = 0;
+        uint currentPeriodeMs = 0;
+        uint time = 0;
         relativeTime.GetAsMilliSeconds(out time);
 
-        long start = 0, end = 0;
+        uint start = 0, end = 0;
 
         int i = 0;
         bool isInRange;
@@ -168,15 +186,18 @@ public class RelativeTruncatedBoolHistory
 
 
     public void GetTrueAndFalsePourcent(out double pourcentTrue, out double pourcentFalse) {
-        long t, f, o;
+        uint t, f, o;
         GetTrueAndFalseTimecount(out t, out f, out o);
+        if (o == 0) { pourcentTrue = pourcentFalse = 0; return; 
+        
+        }
         pourcentTrue = t / (double) o;
-        pourcentFalse = f / (double)o;
+        pourcentFalse = f / (double) o;
     }
 
-    public void GetTrueAndFalseTimecount(out long trueCountInMs , out long falseCountInMs , out long observedTime)
+    public void GetTrueAndFalseTimecount(out uint trueCountInMs , out uint falseCountInMs , out uint observedTime)
     {
-        long n, f;
+        uint n, f;
         m_farestFromNow.GetAsMilliSeconds(out f);
         m_nearestFromNow.GetAsMilliSeconds(out n);
         observedTime = f - n;
@@ -195,7 +216,7 @@ public class RelativeTruncatedBoolHistory
          trueCountInMs=0;
          falseCountInMs=0;
 
-        long currentPeriodeMs = 0;
+        uint currentPeriodeMs = 0;
         int i = 0;
         do
         {
@@ -207,7 +228,7 @@ public class RelativeTruncatedBoolHistory
             i++;
         } while ( i < m_foundFromNowToPast.Count);
 
-        long leftover = observedTime - (trueCountInMs + falseCountInMs);
+        uint leftover = observedTime - (trueCountInMs + falseCountInMs);
         if (GetEndState())
             trueCountInMs += leftover;
         else
@@ -293,16 +314,16 @@ public class RelativeTruncatedBoolHistory
         count = 0;
         switch (type)
         {
-            case AllBumpType.GroundBump:
+            case AllBumpType.FalseBump:
                 GetBumpsCount(out count, from, to);
                 break;
-            case AllBumpType.GroundHole:
+            case AllBumpType.FalseHole:
                 GetHolesCount(out count, from, to);
                 break;
-            case AllBumpType.CeilingBump:
+            case AllBumpType.TrueBump:
                 GetCeilingBumpsCount(out count, from, to);
                 break;
-            case AllBumpType.CeilingHole:
+            case AllBumpType.TrueHole:
                 GetCeilingHolesCount(out count, from, to);
                 break;
             default:
@@ -394,7 +415,7 @@ public class RelativeTruncatedBoolHistory
     }
 }
 
-public enum AllBumpType { GroundBump,GroundHole, CeilingBump, CeilingHole}
+public enum AllBumpType { FalseBump,FalseHole, TrueBump, TrueHole}
 
 public enum BumpGroundType { GroundFalse, GroundTrue }
 public enum HoleType { CeilingHole, CliffHole }
@@ -408,7 +429,7 @@ public class BinaryBump
     public BinaryBump(BoolStatePeriode targetPeriode)
     {
         m_bumpState = targetPeriode.GetState() ;
-        m_duration = new TimeInMsLong( targetPeriode.GetElpasedTimeAsLongMs() );
+        m_duration = new TimeInMsUnsignedInteger( targetPeriode.GetElpasedTimeAsLongMs() );
     }
 
     public bool GetBumpValue() { return m_bumpState; }
@@ -427,7 +448,7 @@ public class BinaryHole
     public BinaryHole(BoolStatePeriode targetPeriode)
     {
         m_holeState = targetPeriode.GetState();
-        m_duration = new TimeInMsLong(targetPeriode.GetElpasedTimeAsLongMs());
+        m_duration = new TimeInMsUnsignedInteger(targetPeriode.GetElpasedTimeAsLongMs());
     }
 
     public bool GetHoleValue() { return m_holeState; }

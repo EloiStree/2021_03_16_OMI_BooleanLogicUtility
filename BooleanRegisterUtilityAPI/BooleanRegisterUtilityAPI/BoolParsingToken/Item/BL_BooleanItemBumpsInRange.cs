@@ -23,10 +23,10 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
         public override string ToString()
         {
             char bc = ' ';
-            if (m_bumpType == AllBumpType.GroundBump || m_bumpType == AllBumpType.CeilingHole)
-                bc = '⊓';
-            if (m_bumpType == AllBumpType.GroundHole || m_bumpType == AllBumpType.CeilingBump)
+            if (m_bumpType == AllBumpType.FalseBump || m_bumpType == AllBumpType.TrueHole)
                 bc = '⊔';
+            if (m_bumpType == AllBumpType.FalseHole || m_bumpType == AllBumpType.TrueBump)
+                bc = '⊓';
             char s = '=';
             if (m_observedType == ObservedBumpType.LessOrEqual)
                 s = '-';

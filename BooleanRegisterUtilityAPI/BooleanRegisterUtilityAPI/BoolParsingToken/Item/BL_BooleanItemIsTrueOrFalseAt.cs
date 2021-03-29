@@ -24,5 +24,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
             return string.Format(" [B{2},{0}: {1}] ", GetTargetName(), GetObservedTime().ToString(), m_stateObserved == BoolState.True? "_" : "‾");
         }
 
+        public bool GetBoolAsValue()
+        {
+            return m_stateObserved == BoolState.True;
+        }
     }
 }
