@@ -151,6 +151,7 @@
     <Compile Include="RegisterRefBlock\RegisterRefStringParser.cs" />
     <Compile Include="RegisterRefBlock\ToCodeLater\RegisterRefMorseInRange.cs" />
     <Compile Include="RegisterRefBlock\ToCodeLater\RegisterRefSwitchCountBetweenBlock.cs" />
+    <Compile Include="Unstored\BLElementToLogicBuilder.cs" />
     <Compile Include="Unstored\BooleanStateRegisterMono.cs" />
     <Compile Include="Unstored\BooleanStateUtility.cs" />
     <Compile Include="Unstored\BoolHistoryDescription.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="RegisterRefBlock\RegisterRefSwitchBetweenBlock.cs" />
     <Compile Include="RegisterRefBlock\RegisterRefTimecountInRange.cs" />
     <Compile Include="RegisterRefBlock\TimeLogicBlock.cs" />
+    <Compile Include="Unstored\LinkLogicBuilderToRegister.cs" />
     <Compile Include="Unstored\TextToBoolStateMachineParser.cs" />
     <Compile Include="Unstored\BooleanTextDebugUtility.cs" />
     <Compile Include="Timer\BooleanStateRegisterTimeTracker.cs" />

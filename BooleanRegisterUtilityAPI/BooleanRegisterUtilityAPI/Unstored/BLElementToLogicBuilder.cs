@@ -690,7 +690,7 @@ namespace BooleanRegisterUtilityUnitTDD
             List<IGroupOfToken> innerGroup = group.GetInnerGroup();
             if (innerGroup == null)
                 return false;
-            if (innerGroup.Count < 2)
+            if (innerGroup.Count <= 2)
                 return false;
             for (int i = 0; i < innerGroup.Count; i++)
             {
@@ -709,7 +709,7 @@ namespace BooleanRegisterUtilityUnitTDD
                 }
             }
 
-            if (bracketEnd != -1 && bracketStart != -1 && (bracketStart!=0 && bracketEnd!=innerGroup.Count-1))
+            if (bracketEnd != -1 && bracketStart != -1 && !(bracketStart==0 && bracketEnd==innerGroup.Count-1))
             {
                 List<IGroupOfToken> left, center, right;
                 Cut(innerGroup, bracketStart, bracketEnd, out left, out center, out right);
@@ -859,7 +859,7 @@ public class GroupOfToken: IGroupOfToken
 
     public override string ToString()
     {
-        return "G:" + string.Join(" : ", m_list.Select(k=>k.ToString())) ;
+        return "G:" + string.Join(" : ", m_list.Select(k=>k.ToString()).ToArray()) ;
     }
 
     public void Overwrite(List<IGroupOfToken> list)
@@ -935,7 +935,7 @@ public class LeafToken : IGroupOfToken
 
     public override string ToString()
     {
-        return "L:"+string.Join(" : ", m_list.Select(k=>k.ToString()));
+        return "L:"+string.Join(" : ", m_list.Select(k=>k.ToString()).ToArray());
     }
 
     public bool IsSingle(out StringTokenTypeAndSource target)
@@ -976,7 +976,7 @@ public class LeafToken : IGroupOfToken
         }
         else {
 
-            return string.Join(":", m_list.Select(k=>k.ToString()));
+            return string.Join(":", m_list.Select(k=>k.ToString()).ToArray());
         }
     }
 

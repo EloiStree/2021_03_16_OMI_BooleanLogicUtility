@@ -180,6 +180,14 @@ namespace BooleanRegisterUtilityAPI.Interface
 
     }
 
+    public interface IRefBooleanRegister {
+
+        IBooleanStorage GetRef(); 
+        bool HasRef();
+        void RedefineRegister(IBooleanStorage reg, out bool changed, out IBooleanStorage previous);
+    }
+
+
     public interface IBoolObservedTime {
         bool IsTimeKey();
         bool IsTimeRange();

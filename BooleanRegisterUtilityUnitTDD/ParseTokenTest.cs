@@ -16,6 +16,14 @@ namespace BooleanRegisterUtilityUnitTDD
     [TestClass]
     public class ParseTokenTest
     {
+        BooleanStateRegister register;
+        RefBooleanRegister refRegister;
+        public ParseTokenTest()
+        {
+             register = new BooleanStateRegister();
+            register.QuickSetGroup("up", "!down", "!left", "!right");
+             refRegister = new RefBooleanRegister(register);
+        }
 
 
         [TestMethod]
@@ -63,58 +71,114 @@ namespace BooleanRegisterUtilityUnitTDD
         public void BuildBinaryLogic()
         {
             string toConvert = "up + ( ! down + 1 ) + ( ! [AND 1 [ 1 0 1 0] 0 ! 1] + ( ! ! 1 + 0)) = ! 1 ";
+            TestConvertionOf(toConvert);
             toConvert = "!up +  ! down ";
+            TestConvertionOf(toConvert);
             toConvert = "up + ( ! down + 1 ) + ( ! [AND 1 [ 1 0 1 0] 0  1] )+ ( ! 1 +! 0) =  1 ";
+            TestConvertionOf(toConvert);
             toConvert = "up⤓5s + ( ! down + 1 ) + ( ! [AND 1 [ 1 0 1 0] 0  1] )+ ( ! 1 +! 0) =  1 ";
-            Console.Write(toConvert);
-            BL.GetRegister();
-            BooleanStateRegister register = new BooleanStateRegister();
-            register.QuickSetGroup("up", "!down", "!left", "!right");
-            RefBooleanRegister refRegister = new RefBooleanRegister(register);
 
-            BL_BuilderElements elements;
-            TextLineSpliteAsBooleanLogicTokens t = new TextLineSpliteAsBooleanLogicTokens(
-              toConvert,
-                false);
-            BLTokensToBLBuilder tokenbuilder = new BLTokensToBLBuilder(t, out elements);
+            TestConvertionOf(toConvert);
+            toConvert = "up⤓5s + ( ! down + 1 ) + ( ! [AND 1 [ 1 0 1 0] 0  1] )+ ( ! 1 +! 0) =  1 ";
 
-            LogicBlock startlogic;
-            List< LogicBlock > createdLogic;
-            BLElementToLogicBuilder logicBuilder = new BLElementToLogicBuilder(elements, out startlogic, out createdLogic, false);
-           
+        }
+        [TestMethod]
+        public void FailedInUnityButShouldNot()
+        {
+
+            //TestConvertionOf("(up + down + aaa? ) + 1", true);
+            //TestConvertionOf("(up + down  ) + (left + right)", true);
+            //TestConvertionOf("(up + down  ) xor (left + right)", true);
+
+            TestConvertionOf("[and up left ] + [and up down ] ", true);
             
 
-            Console.WriteLine("\n--------------------------------------------");
-            //   Console.WriteLine("<<| " + startlogic);
 
-            for (int i = 0; i < createdLogic.Count; i++)
+        }
+        [TestMethod]
+        public void TDD_SimpleBoolean()
+        {
+
+            Console.WriteLine("########### And #########");
+            TestConvertionOf("1+1");
+            TestConvertionOf("0+1");
+            TestConvertionOf("1+0");
+            TestConvertionOf("0+0");
+            Console.WriteLine("########### OR #########");
+            TestConvertionOf("1 | 1");
+            TestConvertionOf("0 | 1");
+            TestConvertionOf("1 | 0");
+            TestConvertionOf("0 | 0");
+            Console.WriteLine("########### XOR #########");
+            TestConvertionOf("1 xor 1");
+            TestConvertionOf("0 xor 1");
+            TestConvertionOf("1 xor 0");
+            TestConvertionOf("0 xor 0");
+            Console.WriteLine("########### XEQ #########");
+            TestConvertionOf("1 ≡ 1");
+            TestConvertionOf("0 ≡ 1");
+            TestConvertionOf("1 ≡ 0");
+            TestConvertionOf("0 ≡ 0");
+        }
+
+
+        [TestMethod]
+        public void TDD_MultiDuoBoolean()
+        {
+
+            Console.WriteLine("########### And #########");
+            TestConvertionOf("1+1+1+1");
+            TestConvertionOf("0+1+1+0");
+            TestConvertionOf("1+0+1+1");
+            TestConvertionOf("0+0+0+0");
+            Console.WriteLine("########### OR #########");
+            TestConvertionOf("1 | 1 | 1 | 1");
+            TestConvertionOf("0 | 1 | 0 | 0");
+            TestConvertionOf("1 | 0 | 0 | 0");
+            TestConvertionOf("0 | 0 | 0 | 0");
+            Console.WriteLine("########### XOR #########");
+            TestConvertionOf("1 xor 1 xor 1 xor 1");
+            TestConvertionOf("0 xor 1 xor 1");
+            TestConvertionOf("1 xor 0 xor 1");
+            TestConvertionOf("0 xor 0 xor 0 xor 0");
+            Console.WriteLine("########### XEQ #########");
+            TestConvertionOf("1 ≡ 1  ≡ 1 ≡ 1");
+            TestConvertionOf("0 ≡ 1 ≡ 1");
+            TestConvertionOf("1 ≡ 0 ≡ 0");
+            TestConvertionOf("0 ≡ 0 ≡ 0 ≡ 0");
+        }
+
+
+
+        private void TestConvertionOf(string toConvert, bool debug= false)
+        {
+            LogicBlock startlogic;
+            RegisterRefStringParser.TryParseTextToLogicBlockRef(toConvert, refRegister, out startlogic, debug );
+
+            if (startlogic == null)
             {
-                if (createdLogic[i] is BL_ToBeDefined)
-                {
-                    BL_ToBeDefined tb = (BL_ToBeDefined)createdLogic[i];
-                    RegisterRefStringParser.TryToParseAndSetItem(refRegister, tb);
-                   // Console.WriteLine("TB| " + tb);
+                Console.WriteLine("------------FAIL-----------------| ");
+                Console.WriteLine("|"+toConvert);
+                return;
 
-                }
-                else
-                {
-                   // Console.WriteLine("C| " + createdLogic[i]);
-                }
             }
+
+            Console.WriteLine("-----------------------------| ");
+            Console.Write(toConvert);
+
             Console.WriteLine("<<| " + startlogic);
             bool value, compute;
             startlogic.Get(out value, out compute);
-            Console.WriteLine("Result| " + value+"-"+compute);
-
-            //foreach (var item in elements.GetItems())
-            //{
-            //    Console.WriteLine(item.ToString());
-            //}
-            //foreach (var item in elements.GetTokens())
-            //{
-            //    Console.WriteLine(item.ToString());
-            //}
-
+            Console.WriteLine("Result| " + value + "-" + compute);
+            Console.WriteLine("-----------------------------| ");
         }
+
+
+
+        private void TestConvertionOfWithDebug(string v)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

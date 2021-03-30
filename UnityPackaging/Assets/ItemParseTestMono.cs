@@ -68,7 +68,7 @@ public class ItemParseTestMono : AbstractRegisterTestMono
         {
             try
             {
-                LogicBlock lb = RegisterRefStringParser.TryToParse(m_refregister, m_toTest[i]);
+                LogicBlock lb = RegisterRefStringParser.TryToParseItem(m_refregister, m_toTest[i]);
                 if (lb != null)
                     m_result.Add(
                         new LogicUnitTest()

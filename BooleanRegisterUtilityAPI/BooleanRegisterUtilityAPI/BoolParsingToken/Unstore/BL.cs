@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System;
 using BooleanRegisterUtilityAPI.BoolParsingToken;
 using BooleanRegisterUtilityAPI.BoolParsingToken.Item.Builder;
+using BooleanRegisterUtilityAPI.RegisterRefBlock;
 
 namespace BooleanRegisterUtilityAPI
 {
@@ -103,60 +104,17 @@ namespace BooleanRegisterUtilityAPI
             }
 
         }
+        public static void PreStoreLogic(string condition) {
+            LogicBlock lb;
+            CreateLogic(condition, out lb, true);
+        }
 
-        private static void CreateLogic(string condition, out LogicBlock logic, bool recordLogic)
+        public static void CreateLogic(string condition, out LogicBlock logic, bool recordLogic)
         {
             logic = null;
+            RegisterRefStringParser.TryParseTextToLogicBlockRef(condition, m_defaultregister, out logic);
 
-            LogicBlockBuilder logicbuilder = new LogicBlockBuilder();
-            ITimeValue tf = new TimeInMsUnsignedInteger(5000);
-            ITimeValue tn = new TimeInMsUnsignedInteger(0);
-
-            IBoolObservedTime key = new BL_TimeToObserve(true, new BL_RelativeTimeFromNow(tf));
-            IBoolObservedTime range = new BL_TimeToObserve(true, new BL_RelativeTimeDurationFromNow(tn,tf));
-            StringTokenTypeAndSource ts;
-            BLTokensToBLBuilder.GetTokenFrom(condition, out ts);
-
-
-            BL_BuilderElements elements;
-            TextLineSpliteAsBooleanLogicTokens t = new TextLineSpliteAsBooleanLogicTokens(condition, false);
-            BLTokensToBLBuilder tokenbuilder = new BLTokensToBLBuilder(t, out elements);
-
-            //logic = builder.Start(new AndLogic(
-            //    new RegisterRefStateTrueBlock(m_defaultregister, new BL_BooleanItemDefault("up")),
-            //    new RegisterRefBoolExistBlock(m_defaultregister, new BL_BooleanItemExist("up")),
-            //    new RegisterRefStateBlock(m_defaultregister, new BL_BooleanItemIsTrueOrFalse("up")),
-            //    new RegisterRefStateAtBlock(m_defaultregister, new BL_BooleanItemIsTrueOrFalseAt("up", range, true)),
-            //    new RegisterRefMaintainingBlock(m_defaultregister, new BL_BooleanItemMaintaining("up", range, true)),
-            //    new RegisterRefSwitchBetweenBlock(m_defaultregister, new BL_BooleanItemSwitchBetween("up", range, true))
-            //    )).GetCurrent();
-
-            //logic = builder.AppendLeft(AppendDuoType.And,
-            //    new RegisterRefStateTrueBlock(m_defaultregister, new BL_BooleanItemDefault("up"))).
-            //  AppendLeft(AppendDuoType.And,
-            //  new RegisterRefBoolExistBlock(m_defaultregister, new BL_BooleanItemExist("up"))).
-            //  AppendLeft(AppendDuoType.And,
-            //   new RegisterRefStateBlock(m_defaultregister, new BL_BooleanItemIsTrueOrFalse("up"))).
-            //  AppendLeft(AppendDuoType.And,
-            //   new RegisterRefStateAtBlock(m_defaultregister, new BL_BooleanItemIsTrueOrFalseAt("up", key, true))).
-            //  AppendLeft(AppendDuoType.And,
-            //   new RegisterRefMaintainingBlock(m_defaultregister, new BL_BooleanItemMaintaining("up", range, true))).
-            //  AppendLeft(AppendDuoType.And,
-            //   new RegisterRefSwitchBetweenBlock(m_defaultregister, new BL_BooleanItemSwitchBetween("up", range, true))
-            //   ).GetCurrent();
-
-
-            //logic = builder.AppendLeft(AppendDuoType.And,
-            //    new RegisterRefStateTrueBlock(m_defaultregister, new BL_BooleanItemDefault("up"))).
-            //  AppendLeft(AppendDuoType.And,
-            //  new RegisterRefBoolExistBlock(m_defaultregister, new BL_BooleanItemExist("up"))).
-            //  AppendLeft(AppendDuoType.And,
-            //   new RegisterRefStateBlock(m_defaultregister, new BL_BooleanItemIsTrueOrFalse("up",true)))
-            //   .GetCurrent();
-
-
-
-            if (recordLogic) {
+            if (recordLogic && logic!=null) {
 
                 if (m_dictionnary.ContainsKey(condition))
                     m_dictionnary[condition] = logic;
@@ -165,7 +123,7 @@ namespace BooleanRegisterUtilityAPI
 
         }
 
-        private static void ContaintLogic(string condition, out bool found, out LogicBlock logic)
+        public static void ContaintLogic(string condition, out bool found, out LogicBlock logic)
         {
             if (m_dictionnary.ContainsKey(condition))
             {
@@ -212,7 +170,7 @@ namespace BooleanRegisterUtilityAPI
         public bool FnE { get { return FalseWithoutError; } }
     }
 
-    public class RefBooleanRegister
+    public class RefBooleanRegister: IRefBooleanRegister
     {
         public IBooleanStorage m_target;
         public ChangeOfRegister m_onChange;
@@ -226,11 +184,10 @@ namespace BooleanRegisterUtilityAPI
 
         public void RedefineRegister(IBooleanStorage register)
         {
-            IBooleanStorage previous = m_target;
-            IBooleanStorage current = register;
-            m_target = current;
-            if (m_onChange != null)
-                m_onChange(previous, current);
+            bool haschanged; IBooleanStorage tmp;
+            RedefineRegister(register, out haschanged, out tmp);
+
+
         }
         public void AddRefChangeListener(ChangeOfRegister changeListener)
         {
@@ -240,6 +197,23 @@ namespace BooleanRegisterUtilityAPI
         {
             m_onChange -= changeListener;
         }
+
+        public void RedefineRegister(IBooleanStorage register, out bool changed, out IBooleanStorage previousReg)
+        {
+
+            IBooleanStorage previous = m_target;
+            IBooleanStorage current = register;
+            m_target = current;
+            if (m_onChange != null)
+            {
+                changed = true;
+                m_onChange(previous, current);
+            }
+            else changed = false;
+
+            previousReg = previous;
+        }
+
         public delegate void ChangeOfRegister(IBooleanStorage previousRegister, IBooleanStorage newRegister);
     }
 }

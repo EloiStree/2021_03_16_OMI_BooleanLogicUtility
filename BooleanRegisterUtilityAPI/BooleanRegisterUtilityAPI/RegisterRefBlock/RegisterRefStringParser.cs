@@ -1,6 +1,8 @@
 ﻿using BooleanRegisterUtilityAPI.BoolParsingToken;
 using BooleanRegisterUtilityAPI.BoolParsingToken.Item;
+using BooleanRegisterUtilityAPI.BoolParsingToken.Item.Builder;
 using BooleanRegisterUtilityAPI.BoolParsingToken.LogicBlock;
+using BooleanRegisterUtilityUnitTDD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,6 +114,31 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
                     registerRef, (BL_BooleanItemExist)bi);
                 parsed = true;
             }
+        }
+
+        public static void TryParseTextToLogicBlockRef(string toConvert, RefBooleanRegister refRegister, out LogicBlock createdLogicBlock, bool debugConsole= false)
+        {
+            BL_BuilderElements elements;
+            TextLineSpliteAsBooleanLogicTokens t = new TextLineSpliteAsBooleanLogicTokens(
+              toConvert,
+                false);
+            BLTokensToBLBuilder tokenbuilder = new BLTokensToBLBuilder(t, out elements);
+
+            LogicBlock startlogic;
+            List<LogicBlock> createdLogic;
+            BLElementToLogicBuilder logicBuilder = new BLElementToLogicBuilder(elements, out startlogic, out createdLogic, debugConsole);
+
+
+            for (int i = 0; i < createdLogic.Count; i++)
+            {
+                if (createdLogic[i] is BL_ToBeDefined)
+                {
+                    BL_ToBeDefined tb = (BL_ToBeDefined)createdLogic[i];
+                    TryToParseAndSetItem(refRegister, tb);
+                }
+            }
+
+            createdLogicBlock = startlogic;
         }
 
         public static void TryToParseAndSetItem(RefBooleanRegister refRegister, BL_ToBeDefined tb)
