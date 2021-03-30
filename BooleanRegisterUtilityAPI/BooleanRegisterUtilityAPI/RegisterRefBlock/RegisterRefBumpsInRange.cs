@@ -80,5 +80,9 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
         {
             return true;
         }
+        public override string ToString()
+        {
+            return m_value.ToString();
+        }
     }
 }

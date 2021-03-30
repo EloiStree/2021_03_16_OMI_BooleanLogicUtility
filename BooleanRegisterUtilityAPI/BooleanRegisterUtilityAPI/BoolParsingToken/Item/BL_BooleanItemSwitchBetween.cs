@@ -32,9 +32,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
             if (m_switchType == SwitchTrackedType.SwitchRecently && m_switchObserved == BooleanSwitchType.SetAsFalse)
                 type = '↑';
             if (m_switchType == SwitchTrackedType.SwitchAndStayActive && m_switchObserved == BooleanSwitchType.SetAsTrue)
-                type = '⤓';
+                type = '↳';
             if (m_switchType == SwitchTrackedType.SwitchAndStayActive && m_switchObserved == BooleanSwitchType.SetAsFalse)
-                type = '⤒';
+                type = '↱';
             return string.Format(" [B{1},{0}:{2}] ", GetTargetName(), type, GetObservedTime().ToString());
         }
     }

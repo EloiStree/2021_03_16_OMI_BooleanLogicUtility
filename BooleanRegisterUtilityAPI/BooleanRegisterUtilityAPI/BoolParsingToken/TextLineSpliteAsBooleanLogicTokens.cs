@@ -79,15 +79,68 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             t = t.Replace("=", " ≡ ");
             t = t.Replace("(", " ( ");
             t = t.Replace(")", " ) ");
-            t = t.Replace("+", " & ");
             t = t.Replace("∧", " & ");
             t = t.Replace("∨", " | ");
-            t = t.Replace("<", " < ");
-            t = t.Replace(">", " > ");
             t = t.Replace("≤", " ≤ ");
             t = t.Replace("≥", " ≥ ");
             t = t.Replace("🀸", " 🀸 ");
             t = t.Replace("🀲", " 🀲 ");
+
+
+            
+
+            t = t.Replace("⊔+", "⊔⋗");
+            t = t.Replace("⊔-", "⊔⋖");
+            t = t.Replace("⊓+", "⊓⋗");
+            t = t.Replace("⊓-", "⊓⋖");
+            t = t.Replace("⊔>", "⊔⋗");
+            t = t.Replace("⊔<", "⊔⋖");
+            t = t.Replace("⊓>", "⊓⋗");
+            t = t.Replace("⊓<", "⊓⋖");
+
+
+            t = t.Replace("⏱", "∑");
+            t = t.Replace("%+", "%⋗");
+            t = t.Replace("%-", "%⋖");
+            t = t.Replace("∑+", "∑⋗");
+            t = t.Replace("∑-", "∑⋖");
+            t = t.Replace("%>", "%⋗");
+            t = t.Replace("%<", "%⋖");
+            t = t.Replace("∑>", "∑⋗");
+            t = t.Replace("∑<", "∑⋖");
+
+            t = t.Replace("%_+", "%_⋗");
+            t = t.Replace("%_-", "%_⋖");
+            t = t.Replace("∑_+", "∑_⋗");
+            t = t.Replace("∑_-", "∑_⋖");
+            t = t.Replace("%_>", "%_⋗");
+            t = t.Replace("%_<", "%_⋖");
+            t = t.Replace("∑_>", "∑_⋗");
+            t = t.Replace("∑_<", "∑_⋖");
+
+            t = t.Replace("%‾+", "%‾⋗");
+            t = t.Replace("%‾-", "%‾⋖");
+            t = t.Replace("∑‾+", "∑‾⋗");
+            t = t.Replace("∑‾-", "∑‾⋖");
+            t = t.Replace("%‾>", "%‾⋗");
+            t = t.Replace("%‾<", "%‾⋖");
+            t = t.Replace("∑‾>", "∑‾⋗");
+            t = t.Replace("∑‾<", "∑‾⋖");
+
+            t = t.Replace("⇅", "⊓");
+            t = t.Replace("⇵", "⊔");
+            t = t.Replace("⤒", "↱");
+            t = t.Replace("⤓", "↳");
+             
+             
+
+            t = t.Replace("-", " - ");
+            t = t.Replace("+", " + ");
+            t = t.Replace("<", " < ");
+            t = t.Replace(">", " > ");
+
+            t = t.Replace("!?", "¿");
+            t = t.Replace("?!", "¿");
 
             return t;
         }
@@ -108,9 +161,15 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             t = t.Replace(" xor ", " ⊗ ");
             t = t.Replace(" equal ", " ≡ ");
             t = t.Replace(" not ", " ! ");
-            
+            t = t.Replace(" 10 ", " 🀸 ");
+            t = t.Replace(" 01 ", " 🀲 ");
 
 
+            //TODO Maybe
+            //t = t.Replace(" nor ", " !| ");
+            //t = t.Replace(" nand ", " !& ");
+            //t = t.Replace(" nxor ", " !⊗ ");
+            //t = t.Replace(" nequal ", " !≡ ");
 
             return t;
         }

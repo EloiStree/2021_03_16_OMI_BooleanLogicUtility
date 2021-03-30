@@ -145,11 +145,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
 
 
             }
-            else if (StartWith("_", ref boolmeta) )
-            {
-
-                bItem = CreateMaintainLogic(boolName, boolmeta);
-            }
+           
             else if ( StartWith("↑", ref boolmeta))
             {
 
@@ -161,17 +157,15 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 bItem = CreateSwitchRecently(boolName, boolmeta);
             }
 
-            else if (StartWith("⤒", ref boolmeta))
+            else if (StartWith("↱", ref boolmeta))
             {
                 bItem = CreateSwitchAndStay(boolName, boolmeta);
             }
-            else if (StartWith("⤓", ref boolmeta))
+            else if (StartWith("↳", ref boolmeta))
             {
                 bItem = CreateSwitchAndStay(boolName, boolmeta);
 
             }
-            
-            
             else if (StartWith("⊓", ref boolmeta))
             {
 
@@ -186,23 +180,22 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 if (bItem == null)
                     bItem = CreateBumpMorse(boolName, boolmeta);
             }
-            else if (StartWith("⏱", ref boolmeta))
+            else if (StartWith("∑", ref boolmeta))
             {
 
                 bItem = CreateTimeCount(boolName, boolmeta);
             }
 
-            else if (StartWith("!?", ref boolmeta) && boolmeta.Length == 2)
-            {
-                bItem = CreateExistLogic(boolName, false);
-
-            }
 
             else if (StartWith("?", ref boolmeta) && boolmeta.Length == 1)
             {
                 bItem = CreateExistLogic(boolName, true);
             }
-            else if (StartWith("!?", ref boolmeta) )
+            else if (StartWith("¿", ref boolmeta) && boolmeta.Length == 1)
+            {
+                bItem = CreateExistLogic(boolName, false);
+            }
+            else if (StartWith("¿", ref boolmeta) )
             {
                 bItem = CreateExistLogic(boolName, boolmeta);
 
@@ -226,8 +219,8 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             if ((boolmeta[0] == '_' || boolmeta[0] == '‾') && (boolmeta[1] == '_' || boolmeta[1] == '‾'))
 
             {
-                BoolState stateStart = boolmeta[0] == '_' ? BoolState.True : BoolState.True;
-                BoolState stateEnd = boolmeta[1] == '_' ? BoolState.True : BoolState.True;
+                BoolState stateStart = boolmeta[0] == '_' ? BoolState.True : BoolState.False;
+                BoolState stateEnd = boolmeta[1] == '_' ? BoolState.True : BoolState.False;
 
                 string[] tokens = boolmeta.Split('#');
                 tokens[0] = tokens[0].Replace("_'", "").Replace("_", "");
@@ -263,11 +256,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 else if (tokens[0].IndexOf("_") > -1) state = BoolState.True;
 
                 ValueDualSide valueside = ValueDualSide.More;
-                 if (tokens[0].IndexOf(">") > -1) valueside = ValueDualSide.More;
-                else if (tokens[0].IndexOf("<") > -1) valueside = ValueDualSide.Less;
-                else if (tokens[0].IndexOf("+") > -1) valueside = ValueDualSide.More;
-                else if (tokens[0].IndexOf("-") > -1) valueside = ValueDualSide.Less;
-                tokens[0] = tokens[0].Replace("+", "").Replace("-", "").Replace("<", "").Replace(">", "").Replace("_", "").Replace("‾", "").Replace("%", "");
+                 if (tokens[0].IndexOf("⋗") > -1) valueside = ValueDualSide.More;
+                else if (tokens[0].IndexOf("⋖") > -1) valueside = ValueDualSide.Less;
+                tokens[0] = tokens[0].Replace("⋖", "").Replace("⋗", "").Replace("<", "").Replace(">", "").Replace("_", "").Replace("‾", "").Replace("%", "");
 
                 int pctCount = 0;
                 int.TryParse(tokens[0], out pctCount);
@@ -294,7 +285,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
         private static BL_BooleanItem CreateTimeCount(string boolName, string boolmeta)
         {
           
-            if (StartWith("⏱", ref boolmeta) )
+            if (StartWith("∑", ref boolmeta) )
             {
                
                 string[] tokens = boolmeta.Split('#');
@@ -304,10 +295,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 else if (tokens[0].IndexOf("_") > -1) state = BoolState.True;
 
                 ValueDualSide valueside = ValueDualSide.Less;
-                if (tokens[0].IndexOf('+') > -1) valueside = ValueDualSide.More;
-                if (tokens[0].IndexOf('>') > -1) valueside = ValueDualSide.More;
-                if (tokens[0].IndexOf('<') > -1) valueside = ValueDualSide.Less;
-                tokens[0] = tokens[0].Replace("+", "").Replace(">", "").Replace("<", "").Replace("-", "").Replace("⏱", "");
+                if (tokens[0].IndexOf('⋗') > -1) valueside = ValueDualSide.More;
+                if (tokens[0].IndexOf('⋖') > -1) valueside = ValueDualSide.Less;
+                tokens[0] = tokens[0].Replace("⋗", "").Replace("⋖", "").Replace("∑", "");
 
                 ITimeValue timeCount;
                 ConvertStringToRelativeTimeValue(tokens[0], out timeCount);
@@ -344,22 +334,29 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
           
             if (StartWith("⊓", ref boolmeta) || StartWith("⊔", ref boolmeta))
             {
+                //Console.WriteLine("->>-->" + boolmeta);
                 AllBumpType bumpType = StartWith("⊔", ref boolmeta) ? AllBumpType.FalseBump : AllBumpType.TrueBump;
 
                 string[] tokens = boolmeta.Split('#');
 
                 ObservedBumpType obt = ObservedBumpType.Equal;
-                if (tokens[0].IndexOf('-') > -1) obt = ObservedBumpType.LessOrEqual;
-                if (tokens[0].IndexOf('+') > -1) obt = ObservedBumpType.MoreOrEqual;
-                if (tokens[0].IndexOf('>') > -1) obt = ObservedBumpType.MoreOrEqual;
-                if (tokens[0].IndexOf('<') > -1) obt = ObservedBumpType.LessOrEqual;
-                tokens[0] = tokens[0].Replace("+", "").Replace(">", "").Replace("<", "").Replace("-", "").Replace("⊔", "").Replace("⊓", "");
-                int count = 0;
+                if (tokens[0].IndexOf('⋗') > -1) obt = ObservedBumpType.MoreOrEqual;
+                if (tokens[0].IndexOf('⋖') > -1) obt = ObservedBumpType.LessOrEqual;
+                tokens[0] = tokens[0].Replace("⋗", "").Replace("⋖", "").Replace("<", "").Replace("-", "").Replace("⊔", "").Replace("⊓", "");
+                int count = 0;                 
                 int.TryParse(tokens[0], out count);
 
 
                 IBoolObservedTime observed = null;
-                if (tokens.Length == 2)
+
+                if (tokens.Length == 1)
+                {
+
+                    observed = TryToCatchObservedTime(tokens[0]);
+                    count = 1;
+                }
+
+                else if (tokens.Length == 2)
                 {
 
                     observed = TryToCatchObservedTime(tokens[1]);
@@ -381,30 +378,30 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
         private static BL_BooleanItem CreateBumpMorse(string boolName, string boolmeta)
         {
 
-            if (StartWith("⊓", ref boolmeta) || StartWith("⊔", ref boolmeta))
-            {
-                AllBumpType bumpType = StartWith("⊔", ref boolmeta) ? AllBumpType.FalseBump : AllBumpType.TrueBump;
+            //if (StartWith("⊓", ref boolmeta) || StartWith("⊔", ref boolmeta))
+            //{
+            //    AllBumpType bumpType = StartWith("⊔", ref boolmeta) ? AllBumpType.FalseBump : AllBumpType.TrueBump;
 
-                string[] tokens = boolmeta.Split('#');
-                tokens[0] = morseformat.Replace(tokens[0], "");
-                if (tokens[0].Length == 0)
-                    return null ;
+            //    string[] tokens = boolmeta.Split('#');
+            //    tokens[0] = morseformat.Replace(tokens[0], "");
+            //    if (tokens[0].Length == 0)
+            //        return null ;
                 
 
-                IBoolObservedTime observed = null;
-                if (tokens.Length == 2)
-                {
+            //    IBoolObservedTime observed = null;
+            //    if (tokens.Length == 2)
+            //    {
 
-                    observed = TryToCatchObservedTime(tokens[1]);
-                }
-                else if (tokens.Length == 3)
-                {
-                    observed = TryToCatchObservedTime(tokens[1], tokens[2]);
-                }
+            //        observed = TryToCatchObservedTime(tokens[1]);
+            //    }
+            //    else if (tokens.Length == 3)
+            //    {
+            //        observed = TryToCatchObservedTime(tokens[1], tokens[2]);
+            //    }
 
-                throw new NotImplementedException();
-               // return new BL_BooleanItemMorse(boolName, BL_BooleanItemMorse.Convert(tokens[0],'.','-','_'), observed);
-            }
+            //    throw new NotImplementedException();
+            //   // return new BL_BooleanItemMorse(boolName, BL_BooleanItemMorse.Convert(tokens[0],'.','-','_'), observed);
+            //}
             return null;
 
         }
@@ -417,12 +414,12 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             //    bItem = new BL_BooleanItemSwitchBetween(boolName, SwitchTrackedType.SwitchAndStayActive, timeObserved, checktype == '⤓');
             //    managed = true;
             //}
-            if (StartWith("⤓", ref boolmeta) || StartWith("⤒", ref boolmeta))
+            if (StartWith("↳", ref boolmeta) || StartWith("↱", ref boolmeta))
             {
-                bool value = StartWith("⤓", ref boolmeta);
+                bool value = StartWith("↳", ref boolmeta);
 
                 string[] tokens = boolmeta.Split('#');
-                RemoveStart(ref tokens[0], "⤓", "⤒");
+                RemoveStart(ref tokens[0], "↳", "↱");
 
                 IBoolObservedTime observed = null;
                 if (tokens.Length == 1)
@@ -433,8 +430,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                 {
                     observed = TryToCatchObservedTime(tokens[0], tokens[1]);
                 }
+
                 if (observed == null)
-                    return null;
+                    return new BL_BooleanItemIsTrueOrFalse(boolName, value);
 
                 return new BL_BooleanItemSwitchBetween(boolName, SwitchTrackedType.SwitchAndStayActive, observed, value);
             }
@@ -459,9 +457,9 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
                     observed = TryToCatchObservedTime(tokens[0], tokens[1]);
                 }
                 if (observed == null)
-                    return null;
+                    return new BL_BooleanItemIsTrueOrFalse(boolName, value);
 
-                    return new BL_BooleanItemSwitchBetween(boolName, SwitchTrackedType.SwitchRecently, observed, value);
+                return new BL_BooleanItemSwitchBetween(boolName, SwitchTrackedType.SwitchRecently, observed, value);
             }
             return null;
         }
@@ -504,12 +502,12 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
         public static BL_BooleanItem CreateExistLogic(string boolName, string boolmeta)
         {
 
-            if ( StartWith("?!", ref boolmeta) || StartWith("?", ref boolmeta))
+            if ( StartWith("¿", ref boolmeta) || StartWith("?", ref boolmeta))
             {
-                BoolExistanceState value = StartWith("?", ref boolmeta)? BoolExistanceState.Exist:BoolExistanceState.DontExist;
+                BoolExistanceState value = (StartWith("¿", ref boolmeta)) ? BoolExistanceState.DontExist: BoolExistanceState.Exist;
 
                 string[] tokens = boolmeta.Split('#');
-                RemoveStart(ref tokens[0], "?!", "?");
+                RemoveStart(ref tokens[0], "¿", "?");
 
                 IBoolObservedTime observed = null;
                 if (tokens.Length == 1)
@@ -766,7 +764,8 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken
             if (text == "≥") return ttype = TokenType.B_AMOREOREQUALB;
             if (text == "🀸") return ttype = TokenType.DominoLeftTrue;
             if (text == "🀲") return ttype = TokenType.DominoRightTrue;
-
+            if (text == "10") return ttype = TokenType.DominoLeftTrue;
+            if (text == "01") return ttype = TokenType.DominoRightTrue;
             if (text == "[⊗") return ttype = TokenType.S_XOR;
             if (text == "[&") return ttype = TokenType.S_AND;
             if (text == "[|") return ttype = TokenType.S_OR;

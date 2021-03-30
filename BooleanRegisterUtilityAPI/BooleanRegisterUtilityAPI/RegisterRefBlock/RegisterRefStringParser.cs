@@ -33,6 +33,9 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
 
             parsed = false;
             item = null;
+            if (registerRef == null || bi == null)
+                return;
+
             if (bi.GetType() == typeof(BL_BooleanItemIsTrueOrFalse))
             {
                 BL_BooleanItemIsTrueOrFalse tmp = (BL_BooleanItemIsTrueOrFalse)bi;

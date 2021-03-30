@@ -18,7 +18,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
         }
         public override string ToString()
         {
-            return string.Format(" [BST{0} {1}-{2}] ", GetTargetName(), m_start == BoolState.True ? '1' : '0', m_end == BoolState.True ? '1' : '0');
+            return string.Format(" [B{0}{1}2{2} ] ", GetTargetName(), m_start == BoolState.True ? '1' : '0', m_end == BoolState.True ? '1' : '0');
         }
 
         public BoolState GetStart() { return m_start; }

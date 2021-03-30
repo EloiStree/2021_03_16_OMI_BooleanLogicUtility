@@ -44,7 +44,7 @@ namespace BooleanRegisterUtilityAPI.BoolParsingToken.Item
             if(m_timeObserved!=null)
             m_timeObserved.GetAsMilliSeconds(out ms);
             //⊓⊔-+
-            return string.Format(" [⏱{0}{1}{2},{3}:{4}] ", bc, s, ms, GetTargetName(), GetObservedTime());
+            return string.Format(" [∑{0}{1}{2},{3}:{4}] ", bc, s, ms, GetTargetName(), GetObservedTime());
         }
     }
     public enum ObserveTimeCountType { LessThatTime, MoreThatTime }

@@ -74,5 +74,10 @@ namespace BooleanRegisterUtilityAPI.RegisterRefBlock
         {
             return true;
         }
+
+        public override string ToString()
+        {
+            return m_observed.ToString();
+        }
     }
 }
